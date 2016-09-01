@@ -1,0 +1,24 @@
+@media (max-width: 767px) {
+	
+.totalEstimate {
+	font-size: 24px;
+}
+
+#graphHolder {
+	 margin: 0 5px;
+}
+
+#graphHolder.homeGraph {
+	display: none;
+}
+
+#graph {
+	height: 100vh;
+}
+
+.centralList h2 {
+	font-size: 24px;
+  padding-left: 5px;
+}
+
+}
