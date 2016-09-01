@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Template</title>
+</head>
+<body>
+  <h2> Template working! </h2>
+  <code>
+  {{key}} = {{value}}
+  </code>
+  </body>
+</html>
