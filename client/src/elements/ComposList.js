@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import ComposForm from './ComposForm.js';
+
 const TEST_DATA = [{
   name: 'hello',
   id: '1a2b3c4d',
@@ -36,7 +38,7 @@ class ComposList extends Component {
         </div>
 
         <hr className="fancy" />
-        {/*TODO: ComposForm */}
+        <ComposForm />
       </div>
     );
   }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import SingleForm from './SingleForm.js';
+
 const TEST_DATA = [{
   name: 'hello',
   id: '1a2b3c4d',
@@ -43,7 +45,7 @@ class SingleList extends Component {
         </div>
 
         <hr className="fancy" />
-        {/*TODO: SingleForm */}
+        <SingleForm />
       </div>
     );
   }
