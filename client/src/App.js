@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import ComposItem from './elements/ComposItem.js';
 import ComposList from './elements/ComposList.js';
+import GraphsItem from './elements/GraphsItem.js';
 import GraphsList from './elements/GraphsList.js';
+import SingleItem from './elements/SingleItem.js';
 import SingleList from './elements/SingleList.js';
 
 class App extends Component {
@@ -56,6 +59,16 @@ class App extends Component {
         default: // no-op
       }
       return "Oops, not known";
+    } else if (pathParts.length === 2) {
+      switch (pathParts[0]) {
+        case 'single':
+          return <SingleItem id={pathParts[1]} />;
+        case 'compos':
+          return <ComposItem id={pathParts[1]} />;
+        case 'graphs':
+          return <GraphsItem id={pathParts[1]} />;
+        default: // no-op
+      }
     }
     return "Hmm, need to render";
   }
