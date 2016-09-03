@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import AllInputsList from './elements/AllInputsList.js';
 import ComposItem from './elements/ComposItem.js';
 import ComposList from './elements/ComposList.js';
 import GraphsItem from './elements/GraphsItem.js';
 import GraphsList from './elements/GraphsList.js';
 import SingleItem from './elements/SingleItem.js';
 import SingleList from './elements/SingleList.js';
+
+// HACK
+import LineChart from './elements/LineChart.js';
 
 class App extends Component {
   render() {
@@ -56,6 +60,10 @@ class App extends Component {
           return <ComposList />;
         case 'graphs':
           return <GraphsList />;
+        case 'allInputs':
+          return <AllInputsList />;
+        case '': // Home
+          return <LineChart />; // HACK
         default: // no-op
       }
       return "Oops, not known";
