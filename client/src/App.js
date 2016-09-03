@@ -6,11 +6,9 @@ import ComposItem from './elements/ComposItem.js';
 import ComposList from './elements/ComposList.js';
 import GraphsItem from './elements/GraphsItem.js';
 import GraphsList from './elements/GraphsList.js';
+import HomePage from './elements/HomePage.js';
 import SingleItem from './elements/SingleItem.js';
 import SingleList from './elements/SingleList.js';
-
-// HACK
-import LineChart from './elements/LineChart.js';
 
 class App extends Component {
   render() {
@@ -63,7 +61,7 @@ class App extends Component {
         case 'allInputs':
           return <AllInputsList />;
         case '': // Home
-          return <LineChart />; // HACK
+          return <HomePage />;
         default: // no-op
       }
       return "Oops, not known";
