@@ -7,14 +7,13 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.util.Map;
 
-/** Action to generate JSONP to get one Single line. */
-public class GetSingleHandler implements Handler {
+/** Action to generate JSONP to list all the Graphs. */
+public class ListGraphsHandler implements Handler {
   public JsonResponse handle(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
     // TODO: actual data..
-    String id = pathDetails.get("id");
-    return new JsonResponse(String.format(
-      "{id: '%s', name: 'hello', link: 'http://www.example.com'}", id
-    ));
+    return new JsonResponse(
+      "[{name: 'hello', id: '1a2b3c4d'}]"
+    );
   }
 }

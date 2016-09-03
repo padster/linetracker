@@ -5,7 +5,6 @@ import GraphsForm from './GraphsForm.js';
 const TEST_DATA = [{
   name: 'hello',
   id: '1a2b3c4d',
-  link: 'http://www.example.com',
 }];
 
 class GraphsList extends Component {

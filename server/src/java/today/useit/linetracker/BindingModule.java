@@ -29,7 +29,11 @@ public class BindingModule extends AbstractModule {
   }
 
   void bindDataHandlers() {
-    // bindDataHandler("/single", ListSingleHandler.class);
+    bindDataHandler("/compos", ListComposHandler.class);
+    bindDataHandler("/graphs", ListGraphsHandler.class);
+    bindDataHandler("/single", ListSingleHandler.class);
+    bindDataHandler("/compos/:id", GetComposHandler.class);
+    bindDataHandler("/graphs/:id", GetGraphsHandler.class);
     bindDataHandler("/single/:id", GetSingleHandler.class);
   }
 
