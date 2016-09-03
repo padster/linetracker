@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Present a test page. TODO: delete, or convert to proper debug.
  */
-public class HelloHandler implements Action {
+public class HelloHandler implements Handler {
   @Override public Object handle(Map<String, String> pathDetails, HttpExchange exchange) {
     if (!"GET".equals(exchange.getRequestMethod())) {
       throw new UnsupportedOperationException("Can only GET from DebugHandler");

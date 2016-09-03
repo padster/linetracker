@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.util.Map;
 
-/** Generic action that handles an HTTP request at a given path. */
-public interface Action {
+/** Generic handler that handles an HTTP request at a given path. */
+public interface Handler {
   Object handle(Map<String, String> pathDetails, HttpExchange exchange) throws Exception;
 }

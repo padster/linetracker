@@ -1,6 +1,7 @@
 package today.useit.linetracker;
 
 import today.useit.linetracker.handlers.*;
+import today.useit.linetracker.handlers.data.*;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
@@ -18,9 +19,18 @@ import java.util.Map;
  * Provides all the path -> handler bindings, and a way for other modules to configure them.
  */
 public class BindingModule extends AbstractModule {
+  final String DATA_PATH = "/_";
+
   /** Handler Bindings for this server. */
   void defaultBindings() {
+    bindDataHandlers();
+
     bindHandler("/", HelloHandler.class);
+  }
+
+  void bindDataHandlers() {
+    // bindDataHandler("/single", ListSingleHandler.class);
+    bindDataHandler("/single/:id", GetSingleHandler.class);
   }
 
   @Retention(RetentionPolicy.RUNTIME)
@@ -35,10 +45,10 @@ public class BindingModule extends AbstractModule {
   @BindingAnnotation
   public @interface BackupFilePath {}
 
-  public final Map<String, Provider<? extends Action>> bindings = new HashMap<>();
+  public final Map<String, Provider<? extends Handler>> bindings = new HashMap<>();
 
   @Override protected void configure() {
-    bind(new TypeLiteral<Map<String, Provider<? extends Action>>>(){})
+    bind(new TypeLiteral<Map<String, Provider<? extends Handler>>>(){})
         .annotatedWith(Bindings.class)
         .toInstance(bindings);
 
@@ -47,8 +57,14 @@ public class BindingModule extends AbstractModule {
     bind(MustacheFactory.class).toInstance(new DefaultMustacheFactory());
   }
 
-  public <T extends Action> void bindHandler(String path, Class<T> handlerClass) {
+  public <T extends Handler> void bindHandler(String path, Class<T> handlerClass) {
     bind(handlerClass);
     bindings.put(path, this.getProvider(handlerClass));
+  }
+
+  public <T extends Handler> void bindDataHandler(String path, Class<T> handlerClass) {
+    bind(handlerClass);
+    String dataPath = DATA_PATH + path;
+    bindings.put(dataPath, this.getProvider(handlerClass));
   }
 }

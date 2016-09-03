@@ -23,31 +23,31 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Logic for finding which action to route to, and converting its results to an HttpResponse.
+ * Logic for finding which handler to route to, and converting its results to an HttpResponse.
  * Safe to ignore this file.
  */
 public class RouteHandler implements HttpHandler {
   public static class UnauthorizedException extends RuntimeException {}
 
-  public static class ParsedAction {
-    public final Action action;
+  public static class ParsedHandler {
+    public final Handler handler;
     public final Map<String, String> pathParams;
-    public ParsedAction(Action action, Map<String, String> pathParams) {
-      this.action = action;
+    public ParsedHandler(Handler handler, Map<String, String> pathParams) {
+      this.handler = handler;
       this.pathParams = pathParams;
     }
   }
 
   private final List<String[]> pathRules = new ArrayList<>();
-  private final List<Provider<? extends Action>> pathActions = new ArrayList<>();
+  private final List<Provider<? extends Handler>> pathHandlers = new ArrayList<>();
   private final MustacheFactory mustacheFactory;
 
   @Inject public RouteHandler(MustacheFactory mustacheFactory,
-      @Bindings Map<String, Provider<? extends Action>> actionMap) {
-    actionMap.forEach((path, action) -> {
-      Preconditions.checkArgument(path.startsWith("/"), "Action paths must start with /");
+      @Bindings Map<String, Provider<? extends Handler>> handlerMap) {
+    handlerMap.forEach((path, handler) -> {
+      Preconditions.checkArgument(path.startsWith("/"), "Handler paths must start with /");
       pathRules.add(path.substring(1).split("/"));
-      pathActions.add(action);
+      pathHandlers.add(handler);
     });
     this.mustacheFactory = mustacheFactory;
   }
@@ -60,8 +60,8 @@ public class RouteHandler implements HttpHandler {
     String[] pathParts = exchange.getRequestURI().getPath().substring(1).split("/");
 
     try {
-      ParsedAction parsedAction = parseAction(pathParts);
-      Object result = parsedAction.action.handle(parsedAction.pathParams, exchange);
+      ParsedHandler parsedHandler = parseHandler(pathParts);
+      Object result = parsedHandler.handler.handle(parsedHandler.pathParams, exchange);
       Preconditions.checkState(result != null, "Can't have a null response.");
 
       if (result instanceof TextResponse) {
@@ -91,14 +91,14 @@ public class RouteHandler implements HttpHandler {
     exchange.close();
   }
 
-  public ParsedAction parseAction(String[] parts) throws FileNotFoundException {
+  public ParsedHandler parseHandler(String[] parts) throws FileNotFoundException {
     for (int i = 0; i < pathRules.size(); i++) {
       Map<String, String> paramsMatched = match(parts, pathRules.get(i));
       if (paramsMatched != null) {
-        return new ParsedAction(pathActions.get(i).get(), paramsMatched);
+        return new ParsedHandler(pathHandlers.get(i).get(), paramsMatched);
       }
     }
-    throw new FileNotFoundException("No matching action for /" + String.join("/", parts));
+    throw new FileNotFoundException("No matching handler for /" + String.join("/", parts));
   }
 
   private static Map<String, String> match(String[] parts, String[] pattern) {
@@ -118,6 +118,9 @@ public class RouteHandler implements HttpHandler {
       } else {
         return null;
       }
+    }
+    if (pattern.length > parts.length) {
+      return null;
     }
     return result;
   }
