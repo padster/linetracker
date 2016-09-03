@@ -14,9 +14,9 @@ public class GetComposHandler implements Handler {
     // TODO: actual data...
     String id = pathDetails.get("id");
     return new JsonResponse(String.format(
-      "{id: '%s', name: 'hello', childMetadata: ["
-        + "{name: 'c1', id: 'childid1'}, "
-        + "{name: 'c2', id: 'childid2'}]}",
+      "{\"id\": \"%s\", \"name\": \"hello\", \"childMetadata\": ["
+        + "{\"name\": \"c1\", \"id\": \"childid1\"}, "
+        + "{\"name\": \"c2\", \"id\": \"childid2\"}]}",
      id
     ));
   }

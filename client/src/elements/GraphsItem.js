@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
 
-const TEST_DATA = {
-  name: 'hello',
-  childMetadata: [{
-    name: 'c1',
-    id: 'childid1',
-  }, {
-    name: 'c2',
-    id: 'childid2',
-  }],
-};
+import Store from '../data/Store.js';
 
 class GraphsItem extends Component {
+  dispose: null;
+
+  componentWillMount() {
+    // TODO - change dispose & re-listen on id change.
+    this.dispose = Store.addListener(`graphs/${this.props.id}`, () => {
+      console.log("Changed!");
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount() {
+    this.dispose();
+  }
+
   render() {
-    const line = TEST_DATA;
-    line.id = this.props.id;
+    console.log("Rendering for " + this.props.id);
+    const line = Store.getGraphs(this.props.id);
+    console.log("Loaded in view: %O", line);
+
+    if (line === undefined) {
+      return this.renderLoading();
+    }
+
     const viewGraphLink = '/view/graphs/' + line.id;
     const noChildrenMsg = line.childMetadata.length > 0 ? null :
         "No lines, please add some below...";
@@ -63,6 +74,11 @@ class GraphsItem extends Component {
         {/* TODO: UI for editing the name. UI for adding a line */}
       </div>
     );
+  }
+
+  renderLoading() {
+    // TODO
+    return <span>"Loading..."</span>;
   }
 
   deleteChild(line, child) {

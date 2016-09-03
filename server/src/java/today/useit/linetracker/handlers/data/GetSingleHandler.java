@@ -14,7 +14,7 @@ public class GetSingleHandler implements Handler {
     // TODO: actual data..
     String id = pathDetails.get("id");
     return new JsonResponse(String.format(
-      "{id: '%s', name: 'hello', link: 'http://www.example.com'}", id
+      "{\"id\": \"%s\", \"name\": \"hello\", \"link\": \"http://www.example.com\"}", id
     ));
   }
 }

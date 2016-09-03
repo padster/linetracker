@@ -131,6 +131,8 @@ public class RouteHandler implements HttpHandler {
   }
 
   void handleJsonResponse(HttpExchange exchange, JsonResponse response) throws IOException {
+    // HACK - automate this properly.
+    exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "http://localhost:3000");
     exchange.getResponseHeaders().set("Content-Type", "application/json");
     exchange.sendResponseHeaders(200, response.json.length());
     exchange.getResponseBody().write(response.json.getBytes());

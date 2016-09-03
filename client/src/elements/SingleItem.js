@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
+import Store from '../data/Store.js';
+
 const moment = require('moment');
 
+/*
 const TEST_DATA = {
-  name: 'hello',
-  link: 'http://www.example.com',
   values: [{
     t: '20160901',
     v: 123.6,
@@ -13,13 +14,34 @@ const TEST_DATA = {
     v: 121,
   }],
 };
+*/
 
 class SingleItem extends Component {
+  dispose: null;
+
+  componentWillMount() {
+    // TODO - change dispose & re-listen on id change.
+    this.dispose = Store.addListener(`single/${this.props.id}`, () => {
+      console.log("Changed!");
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount() {
+    this.dispose();
+  }
+
   render() {
-    const line = TEST_DATA;
-    line.id = this.props.id;
+    console.log("Rendering for " + this.props.id);
+    const line = Store.getSingle(this.props.id);
+    console.log("Loaded in view: %O", line);
+
+    if (line === undefined) {
+      return this.renderLoading();
+    }
+
     const viewGraphLink = '/view/single/' + line.id;
-    const noValuesMsg = line.values.length > 0 ? null :
+    const noValuesMsg = line.values && line.values.length > 0 ? null :
         "No values, please enter them below...";
     const handleNewValues = this.insertValues.bind(this);
     const handleSetLink = this.setLink.bind(this);
@@ -39,7 +61,7 @@ class SingleItem extends Component {
         </div>
 
         <ul className="singleList">
-          {line.values.map(value => {
+          {line.values && line.values.map(value => {
             const formattedDay = moment(value.t, 'YYYYMMDD').format('YYYY, MMM DD');
             const handleDelete = () => this.deleteValue(line, value);
             return (
@@ -84,6 +106,11 @@ class SingleItem extends Component {
         {/* TODO: UI for editing the name. */}
       </div>
     );
+  }
+
+  renderLoading() {
+    // TODO
+    return <span>"Loading..."</span>;
   }
 
   deleteValue(line, value) {
