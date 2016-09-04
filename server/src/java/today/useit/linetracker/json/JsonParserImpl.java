@@ -12,7 +12,7 @@ public class JsonParserImpl<T> implements JsonParser<T> {
   public final Class<T> clazz;
 
   public JsonParserImpl(Provider<Gson> gsonProvider, Class<T> clazz) {
-    this.gsonProvider= gsonProvider;
+    this.gsonProvider = gsonProvider;
     this.clazz = clazz;
   }
 
