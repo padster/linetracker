@@ -22,7 +22,7 @@ public class BindingModule extends AbstractModule {
   final String DATA_PATH = "/_";
 
   /** Handler Bindings for this server. */
-  void defaultBindings() {
+  void defaultBindings() {    
     bindDataHandlers();
 
     bindHandler("/", HelloHandler.class);

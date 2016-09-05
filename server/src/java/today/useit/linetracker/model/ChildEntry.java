@@ -10,4 +10,14 @@ public class ChildEntry {
     this.id = id;
     this.name = name;
   }
+
+  @Override public int hashCode() {
+    return id.hashCode();
+  }
+
+  @Override public boolean equals(Object other) {
+    return (other instanceof ChildEntry)
+      ? this.id.equals(((ChildEntry)other).id)
+      : false;
+  }
 }

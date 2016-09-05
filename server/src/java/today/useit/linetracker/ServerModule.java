@@ -3,6 +3,8 @@ package today.useit.linetracker;
 import today.useit.linetracker.BindingModule.Bindings;
 import today.useit.linetracker.BindingModule.ServerPort;
 import today.useit.linetracker.handlers.RouteHandler;
+import today.useit.linetracker.store.InMemoryStore;
+import today.useit.linetracker.store.Store;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -29,6 +31,9 @@ public class ServerModule extends AbstractModule {
 
   @Override protected void configure() {
     bind(Integer.class).annotatedWith(ServerPort.class).toInstance(this.port);
+
+    // TODO - bind to store impl based on whether running in memory or against cloud storage.
+    bind(Store.class).to(InMemoryStore.class);
   }
 
   @Provides @Singleton
