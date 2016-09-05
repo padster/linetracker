@@ -6,5 +6,5 @@ import java.util.List;
 public class GraphsLineMeta {
   public String id;
   public String name;
-  public List<ChildEntry> childMetadata = new ArrayList<ChildEntry>();
+  public List<ChildEntry> childMetadata = new ArrayList<>();
 }

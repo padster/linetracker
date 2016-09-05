@@ -2,14 +2,32 @@ import React, { Component } from 'react';
 
 import ComposForm from './ComposForm.js';
 
-const TEST_DATA = [{
-  name: 'hello',
-  id: '1a2b3c4d',
-}];
+import Store from '../data/Store.js';
 
 class ComposList extends Component {
+  dispose: null;
+
+  componentWillMount() {
+    // TODO - change dispose & re-listen on id change.
+    this.dispose = Store.addListener('compos', () => {
+      console.log("Changed!");
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount() {
+    this.dispose();
+  }
+
   render() {
-    const lines = TEST_DATA;
+    console.log("Rendering list of compos");
+    const lines = Store.listCompos();
+    console.log("Loaded in view: %O", lines);
+
+    if (lines === undefined) {
+      return this.renderLoading();
+    }
+
     const noLineMsg = lines.length > 0 ? null : "No calculated lines! Create one below...";
 
     return (
@@ -41,6 +59,11 @@ class ComposList extends Component {
         <ComposForm />
       </div>
     );
+  }
+
+  renderLoading() {
+    // TODO
+    return <span>"Loading..."</span>;
   }
 
   delete(line) {

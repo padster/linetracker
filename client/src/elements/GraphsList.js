@@ -2,14 +2,32 @@ import React, { Component } from 'react';
 
 import GraphsForm from './GraphsForm.js';
 
-const TEST_DATA = [{
-  name: 'hello',
-  id: '1a2b3c4d',
-}];
+import Store from '../data/Store.js';
 
 class GraphsList extends Component {
+  dispose: null;
+
+  componentWillMount() {
+    // TODO - change dispose & re-listen on id change.
+    this.dispose = Store.addListener('graphs', () => {
+      console.log("Changed!");
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount() {
+    this.dispose();
+  }
+
   render() {
-    const lines = TEST_DATA;
+    console.log("Rendering list of graphs");
+    const lines = Store.listGraphs();
+    console.log("Loaded in view: %O", lines);
+
+    if (lines === undefined) {
+      return this.renderLoading();
+    }
+
     const noLineMsg = lines.length > 0 ? null : "No graphs! Create one below...";
 
     return (
@@ -47,6 +65,11 @@ class GraphsList extends Component {
         <GraphsForm />
       </div>
     );
+  }
+
+  renderLoading() {
+    // TODO
+    return <span>"Loading..."</span>;
   }
 
   delete(line) {

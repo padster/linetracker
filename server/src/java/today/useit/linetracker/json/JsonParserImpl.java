@@ -2,6 +2,7 @@ package today.useit.linetracker.json;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Type;
 import javax.inject.Provider;
 
 /**
@@ -9,15 +10,15 @@ import javax.inject.Provider;
  */
 public class JsonParserImpl<T> implements JsonParser<T> {
   public final Provider<Gson> gsonProvider;
-  public final Class<T> clazz;
+  public final Type type;
 
-  public JsonParserImpl(Provider<Gson> gsonProvider, Class<T> clazz) {
+  public JsonParserImpl(Provider<Gson> gsonProvider, Type type) {
     this.gsonProvider = gsonProvider;
-    this.clazz = clazz;
+    this.type = type;
   }
 
   @Override public T fromJson(String json) {
-    return gson().fromJson(json, clazz);
+    return gson().fromJson(json, type);
   }
 
   @Override public String toJson(T value) {

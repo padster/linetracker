@@ -2,15 +2,32 @@ import React, { Component } from 'react';
 
 import SingleForm from './SingleForm.js';
 
-const TEST_DATA = [{
-  name: 'hello',
-  id: '1a2b3c4d',
-  link: 'http://www.example.com',
-}];
+import Store from '../data/Store.js';
 
 class SingleList extends Component {
+  dispose: null;
+
+  componentWillMount() {
+    // TODO - change dispose & re-listen on id change.
+    this.dispose = Store.addListener('single', () => {
+      console.log("Changed!");
+      this.forceUpdate();
+    });
+  }
+
+  componentWillUnmount() {
+    this.dispose();
+  }
+
   render() {
-    const lines = TEST_DATA;
+    console.log("Rendering list of single");
+    const lines = Store.listSingle();
+    console.log("Loaded in view: %O", lines);
+
+    if (lines === undefined) {
+      return this.renderLoading();
+    }
+
     const noLineMsg = lines.length > 0 ? null : "No basic lines! Create one below...";
 
     return (
@@ -48,6 +65,11 @@ class SingleList extends Component {
         <SingleForm />
       </div>
     );
+  }
+
+  renderLoading() {
+    // TODO
+    return <span>"Loading..."</span>;
   }
 
   delete(line) {

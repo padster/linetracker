@@ -13,6 +13,11 @@ class StoreImpl {
   composItems: Map;
   graphsItems: Map;
 
+  // PICK: merge with the above?
+  singleList: Array<Object>;
+  composList: Array<Object>;
+  graphsList: Array<Object>;
+
   // Map id -> Timeseries datevalues for each item.
   // TODO
 
@@ -22,6 +27,10 @@ class StoreImpl {
     this.singleItems = new Map();
     this.composItems = new Map();
     this.graphsItems = new Map();
+
+    this.singleList = undefined;
+    this.composList = undefined;
+    this.graphsList = undefined;
 
     // Hmm, odd.
     window.$.ajaxSetup({
@@ -78,6 +87,45 @@ class StoreImpl {
       .done(data => {
         this.graphsItems.set(id, data);
         this._triggerListeners(['graphs', id]);
+      })
+      .fail(() => console.error("Couldn't load"));
+  }
+
+  listSingle(): Array<Object> {
+    if (this.singleList !== undefined) {
+      return this.singleList;
+    }
+    window.$.getJSON(`${SERVER_PREFIX}/_/single`)
+      .done(data => {
+        this.singleList = data;
+        // NOTE: listeners for children not triggered
+        this._triggerListeners(['single']);
+      })
+      .fail(() => console.error("Couldn't load"));
+  }
+
+  listCompos(): Array<Object> {
+    if (this.composList !== undefined) {
+      return this.composList;
+    }
+    window.$.getJSON(`${SERVER_PREFIX}/_/compos`)
+      .done(data => {
+        this.composList = data;
+        // NOTE: listeners for children not triggered
+        this._triggerListeners(['compos']);
+      })
+      .fail(() => console.error("Couldn't load"));
+  }
+
+  listGraphs(): Array<Object> {
+    if (this.graphsList !== undefined) {
+      return this.graphsList;
+    }
+    window.$.getJSON(`${SERVER_PREFIX}/_/graphs`)
+      .done(data => {
+        this.graphsList = data;
+        // NOTE: listeners for children not triggered
+        this._triggerListeners(['graphs']);
       })
       .fail(() => console.error("Couldn't load"));
   }
