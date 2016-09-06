@@ -33,7 +33,7 @@ public class ServerModule extends AbstractModule {
     bind(Integer.class).annotatedWith(ServerPort.class).toInstance(this.port);
 
     // TODO - bind to store impl based on whether running in memory or against cloud storage.
-    bind(Store.class).to(InMemoryStore.class);
+    bind(Store.class).to(InMemoryStore.class).asEagerSingleton();
   }
 
   @Provides @Singleton

@@ -73,8 +73,13 @@ class SingleList extends Component {
   }
 
   delete(line) {
-    console.log("Deleting...");
-    console.log(line);
+    console.log(`Deleting /single/${line.id}`);
+    if (window.confirm("Deleting is permanent, are you sure?")) {
+      Store.deleteSingle(line.id, () => {
+        // HACK - use central navigator.
+        this.forceUpdate();
+      });
+    }
   }
 }
 

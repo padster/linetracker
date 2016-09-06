@@ -130,6 +130,22 @@ class StoreImpl {
       .fail(() => console.error("Couldn't load"));
   }
 
+  deleteSingle(id: string, callback: Function) {
+    window.$.ajax({
+      type: "DELETE",
+      url: `${SERVER_PREFIX}/_/single/${id}`,
+      dataType: 'json'
+    }).done(data => {
+      alert("Deleted: recv = " + window.JSON.stringify(data));
+      // HACK - improve.
+      this.singleItems.delete(id);
+      this.singleList = undefined;
+      callback();
+    }).fail(() => {
+      alert("Oops, cant delete...");
+    });
+  }
+
   _triggerListeners(path) {
     for (let i = path.length; i > 0; i--) {
       const listenerPath = path.slice(0, i).join('/');

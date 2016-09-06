@@ -77,13 +77,21 @@ public class InMemoryStore implements Store {
 
   // DELETE
 
-  public boolean deleteSingleMeta(SingleLineMeta line) {
-    return this.singleLines.remove(line);
+  public boolean deleteSingleMeta(String id) {
+    System.out.println("DELETING single: " + id);
+    SingleLineMeta meta = this.getSingleMeta(id);
+    System.out.println(meta);
+    System.out.println(this.singleLines.size());
+    boolean result = meta == null ? false : this.singleLines.remove(meta);
+    System.out.println(this.singleLines.size());
+    return result;
   }
-  public boolean deleteComposMeta(ComposLineMeta line) {
-    return this.composLines.remove(line);
+  public boolean deleteComposMeta(String id) {
+    ComposLineMeta meta = this.getComposMeta(id);
+    return meta == null ? false : this.composLines.remove(meta);
   }
-  public boolean deleteGraphsMeta(GraphsLineMeta line) {
-    return this.graphsLines.remove(line);
+  public boolean deleteGraphsMeta(String id) {
+    GraphsLineMeta meta = this.getGraphsMeta(id);
+    return meta == null ? false : this.graphsLines.remove(meta);
   }
 }

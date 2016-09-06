@@ -17,7 +17,7 @@ public interface Store {
   ComposLineMeta createComposMeta(ComposLineMeta line);
   GraphsLineMeta createGraphsMeta(GraphsLineMeta line);
 
-  boolean deleteSingleMeta(SingleLineMeta line);
-  boolean deleteComposMeta(ComposLineMeta line);
-  boolean deleteGraphsMeta(GraphsLineMeta line);
+  boolean deleteSingleMeta(String id);
+  boolean deleteComposMeta(String id);
+  boolean deleteGraphsMeta(String id);
 }
