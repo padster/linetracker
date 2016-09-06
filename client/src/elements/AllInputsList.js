@@ -1,20 +1,40 @@
 import React, { Component } from 'react';
 
+import Store from '../data/Store.js';
+
 const moment = require('moment');
 
-const TEST_DATA = [{
-  name: 'hello',
-  id: '1a2b3c4d',
-  link: 'http://www.example.com',
-}, {
-  name: 'hello 2',
-  id: '1a2b3c4d5e',
-  link: 'http://www.example.com',
-}];
-
 class AllInputsList extends Component {
+  state: null;
+  dispose: null;
+
+  componentWillMount() {
+    this.state = {
+      values: [],
+      entryDate: moment().format('YYYY-MM-DD'),
+    };
+
+    // TODO - change dispose & re-listen on id change.
+    this.dispose = Store.addListener('single', () => {
+      console.log("Changed!");
+      const allLines = Store.listSingle();
+      this.setState({values: allLines.map(line => '')});
+    });
+  }
+
+  componentWillUnmount() {
+    this.dispose();
+  }
+
   render() {
-    const lines = TEST_DATA;
+    console.log("Rendering list of single");
+    const lines = Store.listSingle();
+    console.log("Loaded in view: %O", lines);
+
+    if (lines === undefined) {
+      return this.renderLoading();
+    }
+
     const noLinesMsg = lines.length > 0 ? null : (
       <span>Nothing to add - first create some <a href="/single">basic lines</a></span>
     );
@@ -22,30 +42,31 @@ class AllInputsList extends Component {
     return (
       <div className="centralList allInput">
         <h2>Bulk entry</h2>
-        {this.renderLinesIfAny()}
+        {this.renderLinesIfAny(lines)}
         {noLinesMsg}
       </div>
     );
   }
 
-  renderLinesIfAny() {
-    const lines = TEST_DATA;
+  renderLinesIfAny(lines: Array<Object>) {
     if (lines.length === 0) {
       return null;
     }
-    const todayForInput = moment().format('YYYY-MM-DD');
+
     const submitHandler = this.addValues.bind(this);
     return (
       <form name="allInput" method="post" onSubmit={submitHandler}>
         <ul className="singleList">
-          {lines.map(line => {
+          {lines.map((line, idx) => {
             const link = '/single/' + line.id; // HACK
-            const inputName = 'in_' + line.id;
+            const value = this.state.values[idx];
+
             const openLinkOrSpacer = !line.link ? <span className="buttonSpacer" /> : (
               <a className="btn btn-mini viewlink" href={line.link} target="_blank" tabIndex="2">
                 <i className="material-icons">open_in_new</i>
               </a>
             );
+
             return (
               <li key={line.id}><div className="trow">
                 <div className="listingName">
@@ -53,7 +74,16 @@ class AllInputsList extends Component {
                 </div>
                 <div className="flex-spacer" />
                 <div className="listingActions">
-                  <input className="valueInput" type="number" step="any" name={inputName} tabIndex="1" />
+                  <input type="number"
+                    className="valueInput"
+                    step="any"
+                    tabIndex="1"
+                    value={value}
+                    onChange={e => {
+                      const valuesCopy = [...this.state.values];
+                      valuesCopy[idx] = e.target.value;
+                      this.setState({values: valuesCopy});
+                    }} />
                   {openLinkOrSpacer}
                 </div>
                 <div className="clear" />
@@ -63,15 +93,24 @@ class AllInputsList extends Component {
         </ul>
 
         <hr className="fancy" />
-        For date: <input type="date" name="time" value={todayForInput} />
+        For date: &nbsp;
+        <input type="date"
+          value={this.state.entryDate}
+          onChange={e => this.setState({entryDate: e.target.value})}
+        />
         <input className="btn" type="submit" value="Go!" />
       </form>
     );
   }
 
+  renderLoading() {
+    // TODO
+    return <span>"Loading..."</span>;
+  }
+
   addValues(e) {
     e.preventDefault();
-    console.log("Adding values...");
+    console.log(`Adding ${JSON.stringify(this.state.values)} for ${this.state.entryDate}`);
   }
 }
 

@@ -11,3 +11,4 @@ client/npm-debug.log
 # Server
 server/target
 server/debug.log
+server/debug.log.lck

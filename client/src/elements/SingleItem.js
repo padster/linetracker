@@ -4,22 +4,18 @@ import Store from '../data/Store.js';
 
 const moment = require('moment');
 
-/*
-const TEST_DATA = {
-  values: [{
-    t: '20160901',
-    v: 123.6,
-  },{
-    t: '20160831',
-    v: 121,
-  }],
-};
-*/
-
 class SingleItem extends Component {
+  state: Object;
   dispose: null;
 
   componentWillMount() {
+    this.state = {
+      singleValueAmount: '',
+      singleValueDate: moment().format('YYYY-MM-DD'),
+      multipleValueText: '',
+      newLinkURL: null,
+    };
+
     // TODO - change dispose & re-listen on id change.
     this.dispose = Store.addListener(`single/${this.props.id}`, () => {
       console.log("Changed!");
@@ -45,7 +41,7 @@ class SingleItem extends Component {
         "No values, please enter them below...";
     const handleNewValues = this.insertValues.bind(this);
     const handleSetLink = this.setLink.bind(this);
-    const todayForInput = moment().format('YYYY-MM-DD');
+    const linkToShow = this.state.newLinkURL !== null ? this.state.newLinkURL : line.link;
 
     return (
       <div className="centralList">
@@ -83,15 +79,28 @@ class SingleItem extends Component {
 
         <form name="values" method="post" onSubmit={handleNewValues}>
           Enter single value, with time: <br />
-          <input type="number" step="any" name="value"></input>
-          <input type="date" name="time" value={todayForInput}></input>
-          <a className="btn btn-mini oneuplink" title="Permalink" href="#oneup/{{id}}">
+          <input type="number"
+            step="any"
+            value={this.state.singleValueAmount}
+            onChange={e => this.setState({singleValueAmount: e.target.value})}
+          />
+          <input type="date"
+            value={this.state.singleValueDate}
+            onChange={e => this.setState({singleValueDate: e.target.value})}
+          />
+          {/* TODO: support one-up page. */}
+          <a className="btn btn-mini oneuplink" title="Permalink" href="oneup/{{id}}">
             <i className="material-icons">link</i>
           </a>
           <br />
 
           <i>Or</i>, enter multiple at the same time: <br />
-          <textarea name="bulk" className="span5" placeholder="Multiple values, one per line, each: dd/mm/yyyy,value" />
+          <textarea
+            className="span5"
+            placeholder="Multiple values, one per line, each: dd/mm/yyyy,value"
+            value={this.state.multipleValueText}
+            onChange={e => this.setState({multipleValueText: e.target.value})}
+          />
           <br />
 
           <input className="btn" type="submit" value="Add the value(s)"></input>
@@ -99,8 +108,11 @@ class SingleItem extends Component {
 
         <form name="linkvalue" method="post" onSubmit={handleSetLink}>
         Optionally, Add a link for the resource: <br />
-        <input type="text" name="link" value={line.link}></input>
-        <input className="btn" type="submit" value="Set link"></input>
+        <input type="text"
+          value={linkToShow}
+          onChange={e => this.setState({newLinkURL: e.target.value})}
+        />
+        <input className="btn" type="submit" value="Set link" />
         </form>
 
         {/* TODO: UI for editing the name. */}
@@ -124,7 +136,7 @@ class SingleItem extends Component {
 
   setLink(e) {
     e.preventDefault();
-    console.log("TODO: set link");
+    console.log(`TODO: set link to ${this.state.newLinkURL}`);
   }
 }
 
