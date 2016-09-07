@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 
 import SingleForm from './SingleForm.js';
 
-import Store from '../data/Store.js';
+import Stores from '../data/Stores.js';
 
 class SingleList extends Component {
   dispose: null;
 
   componentWillMount() {
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Store.addListener('single', () => {
+    this.dispose = Stores.singleStore.addListener('', () => {
       console.log("Changed!");
       this.forceUpdate();
     });
@@ -21,7 +21,7 @@ class SingleList extends Component {
 
   render() {
     console.log("Rendering list of single");
-    const lines = Store.listSingle();
+    const lines = Stores.singleStore.list();
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
@@ -75,10 +75,7 @@ class SingleList extends Component {
   delete(line) {
     console.log(`Deleting /single/${line.id}`);
     if (window.confirm("Deleting is permanent, are you sure?")) {
-      Store.deleteSingle(line.id, () => {
-        // HACK - use central navigator.
-        this.forceUpdate();
-      });
+      Stores.singleStore.delete(line.id);
     }
   }
 }

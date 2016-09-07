@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-import Store from '../data/Store.js';
+import Stores from '../data/Stores.js';
 
 class ComposItem extends Component {
   dispose: null;
 
   componentWillMount() {
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Store.addListener(`compos/${this.props.id}`, () => {
+    this.dispose = Stores.composStore.addListener(`${this.props.id}`, () => {
       console.log("Changed!");
       this.forceUpdate();
     });
@@ -19,7 +19,7 @@ class ComposItem extends Component {
 
   render() {
     console.log("Rendering for " + this.props.id);
-    const line = Store.getCompos(this.props.id);
+    const line = Stores.composStore.get(this.props.id);
     console.log("Loaded in view: %O", line);
 
     if (line === undefined) {

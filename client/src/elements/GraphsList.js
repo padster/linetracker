@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 
 import GraphsForm from './GraphsForm.js';
 
-import Store from '../data/Store.js';
+import Stores from '../data/Stores.js';
 
 class GraphsList extends Component {
   dispose: null;
 
   componentWillMount() {
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Store.addListener('graphs', () => {
+    this.dispose = Stores.graphsStore.addListener('', () => {
       console.log("Changed!");
       this.forceUpdate();
     });
@@ -21,7 +21,7 @@ class GraphsList extends Component {
 
   render() {
     console.log("Rendering list of graphs");
-    const lines = Store.listGraphs();
+    const lines = Stores.graphsStore.list();
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
@@ -75,7 +75,7 @@ class GraphsList extends Component {
   delete(line) {
     console.log(`Deleting /compos/${line.id}`);
     if (window.confirm("Deleting is permanent, are you sure?")) {
-      Store.deleteGraphs(line.id);
+      Stores.graphsStore.delete(line.id);
     }
   }
 

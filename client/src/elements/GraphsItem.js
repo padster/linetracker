@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-import Store from '../data/Store.js';
+import Stores from '../data/Stores.js';
 
 class GraphsItem extends Component {
   dispose: null;
 
   componentWillMount() {
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Store.addListener(`graphs/${this.props.id}`, () => {
+    this.dispose = Stores.graphsStore.addListener(`${this.props.id}`, () => {
       console.log("Changed!");
       this.forceUpdate();
     });
@@ -19,7 +19,7 @@ class GraphsItem extends Component {
 
   render() {
     console.log("Rendering for " + this.props.id);
-    const line = Store.getGraphs(this.props.id);
+    const line = Stores.graphsStore.get(this.props.id);
     console.log("Loaded in view: %O", line);
 
     if (line === undefined) {

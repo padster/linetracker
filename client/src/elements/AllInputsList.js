@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Store from '../data/Store.js';
+import Stores from '../data/Stores.js';
 
 const moment = require('moment');
 
@@ -15,9 +15,9 @@ class AllInputsList extends Component {
     };
 
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Store.addListener('single', () => {
+    this.dispose = Stores.singleStore.addListener('', () => {
       console.log("Changed!");
-      const allLines = Store.listSingle();
+      const allLines = Stores.singleStore.list();
       this.setState({values: allLines.map(line => '')});
     });
   }
@@ -28,7 +28,7 @@ class AllInputsList extends Component {
 
   render() {
     console.log("Rendering list of single");
-    const lines = Store.listSingle();
+    const lines = Stores.singleStore.list();
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {

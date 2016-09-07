@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Store from '../data/Store.js';
+import Stores from '../data/Stores.js';
 
 const moment = require('moment');
 
@@ -17,7 +17,7 @@ class SingleItem extends Component {
     };
 
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Store.addListener(`single/${this.props.id}`, () => {
+    this.dispose = Stores.singleStore.addListener(`${this.props.id}`, () => {
       console.log("Changed!");
       this.forceUpdate();
     });
@@ -29,7 +29,7 @@ class SingleItem extends Component {
 
   render() {
     console.log("Rendering for " + this.props.id);
-    const line = Store.getSingle(this.props.id);
+    const line = Stores.singleStore.get(this.props.id);
     console.log("Loaded in view: %O", line);
 
     if (line === undefined) {

@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 
 import ComposForm from './ComposForm.js';
 
-import Store from '../data/Store.js';
+import Stores from '../data/Stores.js';
 
 class ComposList extends Component {
   dispose: null;
 
   componentWillMount() {
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Store.addListener('compos', () => {
+    this.dispose = Stores.composStore.addListener('', () => {
       console.log("Changed!");
       this.forceUpdate();
     });
@@ -21,7 +21,7 @@ class ComposList extends Component {
 
   render() {
     console.log("Rendering list of compos");
-    const lines = Store.listCompos();
+    const lines = Stores.composStore.list();
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
@@ -69,7 +69,7 @@ class ComposList extends Component {
   delete(line) {
     console.log(`Deleting /compos/${line.id}`);
     if (window.confirm("Deleting is permanent, are you sure?")) {
-      Store.deleteCompos(line.id);
+      Stores.composStore.delete(line.id);
     }
   }
 }
