@@ -67,8 +67,10 @@ class ComposList extends Component {
   }
 
   delete(line) {
-    console.log("Deleting...");
-    console.log(line);
+    console.log(`Deleting /compos/${line.id}`);
+    if (window.confirm("Deleting is permanent, are you sure?")) {
+      Store.deleteCompos(line.id);
+    }
   }
 }
 

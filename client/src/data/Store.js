@@ -136,11 +136,40 @@ class StoreImpl {
       url: `${SERVER_PREFIX}/_/single/${id}`,
       dataType: 'json'
     }).done(data => {
-      alert("Deleted: recv = " + window.JSON.stringify(data));
       // HACK - improve.
       this.singleItems.delete(id);
       this.singleList = undefined;
-      callback();
+      this._triggerListeners(['single', id]);
+    }).fail(() => {
+      alert("Oops, cant delete...");
+    });
+  }
+
+  deleteCompos(id: string, callback: Function) {
+    window.$.ajax({
+      type: "DELETE",
+      url: `${SERVER_PREFIX}/_/compos/${id}`,
+      dataType: 'json'
+    }).done(data => {
+      // HACK - improve.
+      this.composItems.delete(id);
+      this.composList = undefined;
+      this._triggerListeners(['compos', id]);
+    }).fail(() => {
+      alert("Oops, cant delete...");
+    });
+  }
+
+  deleteGraphs(id: string, callback: Function) {
+    window.$.ajax({
+      type: "DELETE",
+      url: `${SERVER_PREFIX}/_/graphs/${id}`,
+      dataType: 'json'
+    }).done(data => {
+      // HACK - improve.
+      this.graphsItems.delete(id);
+      this.graphsList = undefined;
+      this._triggerListeners(['graphs', id]);
     }).fail(() => {
       alert("Oops, cant delete...");
     });
