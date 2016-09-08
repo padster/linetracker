@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
+
+import NameModal from './NameModal.js';
 
 import Stores from '../data/Stores.js';
 
@@ -14,6 +17,8 @@ class SingleItem extends Component {
       singleValueDate: moment().format('YYYY-MM-DD'),
       multipleValueText: '',
       newLinkURL: null,
+
+      editNameOpen: false,
     };
 
     // TODO - change dispose & re-listen on id change.
@@ -42,14 +47,15 @@ class SingleItem extends Component {
     const handleNewValues = this.insertValues.bind(this);
     const handleSetLink = this.setLink.bind(this);
     const linkToShow = this.state.newLinkURL !== null ? this.state.newLinkURL : line.link;
+    const openEditName = () => this.setState({editNameOpen: true});
 
     return (
       <div className="centralList">
         <div className="listTitle">
           <h2>{line.name}</h2>
-          <a className="btn btn-mini editName" href="#editNamePopup" title="Rename" data-toggle="modal">
+          <Button bsSize="xsmall" className="btn-mini" title="Rename" onClick={openEditName}>
             <i className="material-icons">mode_edit</i>
-          </a>
+          </Button>
           <div className="flex-spacer" />
           <a href={viewGraphLink} className="btn getView">
             Graph <i className="material-icons graphIcon">trending_up</i>
@@ -115,7 +121,12 @@ class SingleItem extends Component {
         <input className="btn" type="submit" value="Set link" />
         </form>
 
-        {/* TODO: UI for editing the name. */}
+        <NameModal
+          defaultValue={line.name}
+          show={this.state.editNameOpen}
+          onHide={() => this.setState({editNameOpen: false})}
+          onChange={this.changeName.bind(this)}
+        />
       </div>
     );
   }
@@ -137,6 +148,10 @@ class SingleItem extends Component {
   setLink(e) {
     e.preventDefault();
     console.log(`TODO: set link to ${this.state.newLinkURL}`);
+  }
+
+  changeName(name) {
+    console.log(`TODO: change name to ${name}`);
   }
 }
 

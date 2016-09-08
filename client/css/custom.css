@@ -144,6 +144,10 @@ input[type="submit"].btn {
   margin: -10px 6px 0 0; /* ew. */
 }
 
+.btn[disabled]:hover {
+  cursor: not-allowed;
+}
+
 .totalEstimate {
   font-family: 'Droid Sans Mono', sans-serif;
   font-size: 36px;
@@ -320,10 +324,11 @@ label {
 }
 
 /* Material design icon font: http://google.github.io/material-design-icons */
-.btn.btn-mini, .btn.btn-primary, .btn.btn-flex, .listStar {
+.btn.btn-mini, .btn.btn-primary, button.btn, .listStar {
   display: flex;
   margin: 3px 0;
   padding: 2px;
+  align-self: center;
 }
 i.material-icons {
   align-self: center;

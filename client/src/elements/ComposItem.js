@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 
+import NameModal from './NameModal.js';
+
 import Stores from '../data/Stores.js';
 
 class ComposItem extends Component {
+  state: Object;
   dispose: null;
 
   componentWillMount() {
+    this.state = {
+      editNameOpen: false,
+    };
+
     // TODO - change dispose & re-listen on id change.
     this.dispose = Stores.composStore.addListener(`${this.props.id}`, () => {
       console.log("Changed!");
@@ -29,15 +36,16 @@ class ComposItem extends Component {
     const viewGraphLink = '/view/compos/' + line.id;
     const noChildrenMsg = line.childMetadata.length > 0 ? null :
         "No lines, please add some below...";
+    const openEditName = () => this.setState({editNameOpen: true});
 
     return (
       <div>
         <div className="centralList">
           <div className="listTitle">
             <h2>{line.name}</h2>
-            <a className="btn btn-mini editName" href="#editNamePopup" title="Rename" data-toggle="modal">
+            <span className="btn btn-mini editName" title="Rename" onClick={openEditName}>
               <i className="material-icons">mode_edit</i>
-            </a>
+            </span>
             <div className="flex-spacer" />
             <a href={viewGraphLink} className="btn getView">
               Graph <i className="material-icons graphIcon">trending_up</i>
@@ -71,7 +79,14 @@ class ComposItem extends Component {
           <a href="#valueList" className="btn" data-toggle="modal">Add line</a>
         </div>
 
-        {/* TODO: UI for editing the name. UI for adding a line */}
+        <NameModal
+          defaultValue={line.name}
+          show={this.state.editNameOpen}
+          onHide={() => this.setState({editNameOpen: false})}
+          onChange={this.changeName.bind(this)}
+        />
+
+        {/* TODO: UI for adding a line */}
       </div>
     );
   }
@@ -79,6 +94,10 @@ class ComposItem extends Component {
   renderLoading() {
     // TODO
     return <span>"Loading..."</span>;
+  }
+
+  changeName(name) {
+    console.log(`TODO: change name to ${name}`);
   }
 
   deleteChild(line, child) {
