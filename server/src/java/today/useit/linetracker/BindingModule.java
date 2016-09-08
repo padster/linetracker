@@ -22,7 +22,7 @@ public class BindingModule extends AbstractModule {
   final String DATA_PATH = "/_";
 
   /** Handler Bindings for this server. */
-  void defaultBindings() {    
+  void defaultBindings() {
     bindDataHandlers();
 
     bindHandler("/", HelloHandler.class);
@@ -35,6 +35,7 @@ public class BindingModule extends AbstractModule {
     bindDataHandler("/compos/:id", GetComposHandler.class);
     bindDataHandler("/graphs/:id", GetGraphsHandler.class);
     bindDataHandler("/single/:id", GetSingleHandler.class);
+    bindDataHandler("/single/:id/values", SingleValuesHandler.class);
   }
 
   @Retention(RetentionPolicy.RUNTIME)

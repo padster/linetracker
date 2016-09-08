@@ -104,7 +104,7 @@ public class RouteHandler implements HttpHandler {
   private static Map<String, String> match(String[] parts, String[] pattern) {
     Map<String, String> result = new HashMap<>();
     for (int i = 0; i < parts.length; i++) {
-      if (pattern.length < i) {
+      if (pattern.length <= i) {
         return null;
       } else if (pattern[i].equals("*")) {
         continue;

@@ -44,7 +44,7 @@ class SingleItem extends Component {
     const viewGraphLink = '/view/single/' + line.id;
     const noValuesMsg = line.values && line.values.length > 0 ? null :
         "No values, please enter them below...";
-    const handleNewValues = this.insertValues.bind(this);
+    const handleNewValues = this.insertValues.bind(this, line.id);
     const handleSetLink = this.setLink.bind(this);
     const linkToShow = this.state.newLinkURL !== null ? this.state.newLinkURL : line.link;
     const openEditName = () => this.setState({editNameOpen: true});
@@ -140,9 +140,22 @@ class SingleItem extends Component {
     console.log("Deleting %O from %O", value, line);
   }
 
-  insertValues(e) {
+  insertValues(lineId, e) {
     e.preventDefault();
-    console.log("TODO: insert new values");
+    const values = {
+      value: this.state.singleValueAmount,
+      time: this.state.singleValueDate.replace(/-/g, ''),
+      bulk: this.state.multipleValueText,
+    };
+    this.setState({
+      singleValueAmount: '',
+      singleValueDate: moment().format('YYYY-MM-DD'),
+      multipleValueText: '',
+    });
+    console.log("INSERT: " + window.JSON.stringify(values));
+    Stores.singleStore.addValues(lineId, values, (data) => {
+      console.log("Result of insert = %O", data);
+    });
   }
 
   setLink(e) {
