@@ -8,6 +8,7 @@ import today.useit.linetracker.model.ComposLineMeta;
 import today.useit.linetracker.store.ItemStore;
 
 import com.sun.net.httpserver.HttpExchange;
+import org.apache.commons.io.IOUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,8 @@ public abstract class BaseListHandler<T> implements Handler {
 
   public JsonResponse handlePost(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
-    System.out.println("TODO: handle post");
-    return new JsonResponse("");
+    String postData = IOUtils.toString(exchange.getRequestBody(), "utf-8");
+    T result = itemStore.createItem(itemParser.fromJson(postData));
+    return new JsonResponse(itemParser.toJson(result));
   }
 }

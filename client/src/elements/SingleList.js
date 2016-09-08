@@ -62,7 +62,7 @@ class SingleList extends Component {
         </div>
 
         <hr className="fancy" />
-        <SingleForm />
+        <SingleForm onCreate={this.create.bind(this)}/>
       </div>
     );
   }
@@ -70,6 +70,13 @@ class SingleList extends Component {
   renderLoading() {
     // TODO
     return <span>"Loading..."</span>;
+  }
+
+  create(lineMeta: Object) {
+    Stores.singleStore.create(lineMeta, newLine => {
+      // TODO - navigator
+      window.location.replace(`/single/${newLine.id}`);
+    });
   }
 
   delete(line) {

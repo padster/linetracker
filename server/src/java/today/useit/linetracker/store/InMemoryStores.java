@@ -21,7 +21,7 @@ public class InMemoryStores implements Stores {
     this.singleStore.createItem(sline);
 
     ComposLineMeta cline = new ComposLineMeta();
-    cline.id = "1a2b3c4d"; cline.name = "compos store";
+    cline.id = "1a2b3c4d"; cline.name = "compos store"; cline.op = "plus";
     cline.childMetadata.add(new ChildEntry("abcd1234", "hello store"));
     this.composStore.createItem(cline);
 

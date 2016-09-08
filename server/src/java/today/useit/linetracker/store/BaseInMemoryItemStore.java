@@ -19,7 +19,7 @@ public class BaseInMemoryItemStore<T extends HasId> implements ItemStore<T> {
   }
 
   public T createItem(T item) {
-    // TODO - generate ID
+    item.setId(IdGen.randomId());
     items.put(item.id(), item);
     return item;
   }

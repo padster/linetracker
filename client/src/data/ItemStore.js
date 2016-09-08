@@ -69,6 +69,19 @@ class ItemStore {
       .fail(() => console.error("Couldn't load"));
   }
 
+  create(meta: Object, callback: Function) {
+    window.$.ajax({
+      type: "POST",
+      url: `${this.serverBase}`,
+      dataType: 'json',
+      data: JSON.stringify(meta),
+    }).done(data => {
+      callback(data);
+    }).fail(() => {
+      alert("Oops, cant create...");
+    });
+  }
+
   delete(id: string) {
     window.$.ajax({
       type: "DELETE",

@@ -9,6 +9,10 @@ public class SingleLineMeta implements HasId {
     return this.id;
   }
 
+  public void setId(String id) {
+    this.id = id;
+  }
+
   @Override public int hashCode() {
     return id.hashCode();
   }

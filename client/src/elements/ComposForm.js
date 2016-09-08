@@ -45,7 +45,10 @@ class ComposForm extends Component {
 
   submit(e) {
     e.preventDefault();
-    console.log(`Create line ${this.state.newLineName}, op = ${this.state.newLineOp}`);
+    this.props.onCreate({
+      name: this.state.newLineName,
+      op: this.state.newLineOp,
+    });
   }
 }
 

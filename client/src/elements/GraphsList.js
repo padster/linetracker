@@ -62,7 +62,7 @@ class GraphsList extends Component {
         </div>
 
         <hr className="fancy" />
-        <GraphsForm />
+        <GraphsForm onCreate={this.create.bind(this)} />
       </div>
     );
   }
@@ -70,6 +70,13 @@ class GraphsList extends Component {
   renderLoading() {
     // TODO
     return <span>"Loading..."</span>;
+  }
+
+  create(lineMeta: Object) {
+    Stores.graphsStore.create(lineMeta, newLine => {
+      // TODO - navigator
+      window.location.replace(`/graphs/${newLine.id}`);
+    });
   }
 
   delete(line) {

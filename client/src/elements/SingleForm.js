@@ -33,8 +33,9 @@ class SingleForm extends Component {
 
   submit(e) {
     e.preventDefault();
-    // this.props.onCreateLine(this.st)
-    console.log(`Create line ${this.state.newLineName}`);
+    this.props.onCreate({
+      name: this.state.newLineName,
+    });
   }
 }
 

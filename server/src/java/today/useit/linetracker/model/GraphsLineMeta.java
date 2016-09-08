@@ -11,7 +11,11 @@ public class GraphsLineMeta implements HasId {
   public String id() {
     return this.id;
   }
-  
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
   @Override public int hashCode() {
     return id.hashCode();
   }

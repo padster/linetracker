@@ -56,7 +56,7 @@ class ComposList extends Component {
         </div>
 
         <hr className="fancy" />
-        <ComposForm />
+        <ComposForm onCreate={this.create.bind(this)} />
       </div>
     );
   }
@@ -64,6 +64,13 @@ class ComposList extends Component {
   renderLoading() {
     // TODO
     return <span>"Loading..."</span>;
+  }
+
+  create(lineMeta: Object) {
+    Stores.composStore.create(lineMeta, newLine => {
+      // TODO - navigator
+      window.location.replace(`/compos/${newLine.id}`);
+    });
   }
 
   delete(line) {
