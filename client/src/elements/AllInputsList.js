@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import LoadingIndicator from './LoadingIndicator.js';
 import Stores from '../data/Stores.js';
 
 const moment = require('moment');
@@ -32,7 +33,7 @@ class AllInputsList extends Component {
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
-      return this.renderLoading();
+      return <LoadingIndicator />;
     }
 
     const noLinesMsg = lines.length > 0 ? null : (
@@ -101,11 +102,6 @@ class AllInputsList extends Component {
         <input className="btn" type="submit" value="Go!" />
       </form>
     );
-  }
-
-  renderLoading() {
-    // TODO
-    return <span>"Loading..."</span>;
   }
 
   addValues(e) {

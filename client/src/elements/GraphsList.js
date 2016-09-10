@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import GraphsForm from './GraphsForm.js';
+import LoadingIndicator from './LoadingIndicator.js';
 
 import Stores from '../data/Stores.js';
 
@@ -25,7 +26,7 @@ class GraphsList extends Component {
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
-      return this.renderLoading();
+      return <LoadingIndicator />;
     }
 
     const noLineMsg = lines.length > 0 ? null : "No graphs! Create one below...";
@@ -65,11 +66,6 @@ class GraphsList extends Component {
         <GraphsForm onCreate={this.create.bind(this)} />
       </div>
     );
-  }
-
-  renderLoading() {
-    // TODO
-    return <span>"Loading..."</span>;
   }
 
   create(lineMeta: Object) {

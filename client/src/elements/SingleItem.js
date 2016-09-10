@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 
+import LoadingIndicator from './LoadingIndicator.js';
 import NameModal from './NameModal.js';
 
 import Stores from '../data/Stores.js';
@@ -38,7 +39,7 @@ class SingleItem extends Component {
     console.log("Loaded in view: %O", line);
 
     if (line === undefined) {
-      return this.renderLoading();
+      return <LoadingIndicator />;
     }
 
     const viewGraphLink = '/view/single/' + line.id;
@@ -129,11 +130,6 @@ class SingleItem extends Component {
         />
       </div>
     );
-  }
-
-  renderLoading() {
-    // TODO
-    return <span>"Loading..."</span>;
   }
 
   deleteValue(line, value) {

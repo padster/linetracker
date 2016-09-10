@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import ComposForm from './ComposForm.js';
+import LoadingIndicator from './LoadingIndicator.js';
 
 import Stores from '../data/Stores.js';
 
@@ -25,7 +26,7 @@ class ComposList extends Component {
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
-      return this.renderLoading();
+      return <LoadingIndicator />;
     }
 
     const noLineMsg = lines.length > 0 ? null : "No calculated lines! Create one below...";
@@ -59,11 +60,6 @@ class ComposList extends Component {
         <ComposForm onCreate={this.create.bind(this)} />
       </div>
     );
-  }
-
-  renderLoading() {
-    // TODO
-    return <span>"Loading..."</span>;
   }
 
   create(lineMeta: Object) {

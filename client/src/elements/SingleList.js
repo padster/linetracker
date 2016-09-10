@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import LoadingIndicator from './LoadingIndicator.js';
 import SingleForm from './SingleForm.js';
 
 import Stores from '../data/Stores.js';
@@ -25,7 +26,7 @@ class SingleList extends Component {
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
-      return this.renderLoading();
+      return <LoadingIndicator />;
     }
 
     const noLineMsg = lines.length > 0 ? null : "No basic lines! Create one below...";
@@ -65,11 +66,6 @@ class SingleList extends Component {
         <SingleForm onCreate={this.create.bind(this)}/>
       </div>
     );
-  }
-
-  renderLoading() {
-    // TODO
-    return <span>"Loading..."</span>;
   }
 
   create(lineMeta: Object) {

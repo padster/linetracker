@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import LoadingIndicator from './LoadingIndicator.js';
 import NameModal from './NameModal.js';
 
 import Stores from '../data/Stores.js';
@@ -30,7 +31,7 @@ class GraphsItem extends Component {
     console.log("Loaded in view: %O", line);
 
     if (line === undefined) {
-      return this.renderLoading();
+      return <LoadingIndicator />;
     }
 
     const viewGraphLink = '/view/graphs/' + line.id;
@@ -89,11 +90,6 @@ class GraphsItem extends Component {
         {/* TODO: UI for adding a line */}
       </div>
     );
-  }
-
-  renderLoading() {
-    // TODO
-    return <span>"Loading..."</span>;
   }
 
   changeName(name) {
