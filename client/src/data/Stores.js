@@ -2,7 +2,6 @@
 const SERVER_DATA_PREFIX = 'http://localhost:8080/_';
 
 import ItemStore from './ItemStore.js';
-// import SingleStore from './SingleStore.js';
 import ValuesStore from './ValuesStore.js';
 
 /** Holds all the data within the app. */

@@ -3,6 +3,7 @@ package today.useit.linetracker.handlers.data;
 import today.useit.linetracker.handlers.Handler;
 import today.useit.linetracker.handlers.RouteHandlerResponses.JsonResponse;
 import today.useit.linetracker.json.JsonParser;
+import today.useit.linetracker.model.DateFormat;
 import today.useit.linetracker.model.DatedValue;
 import today.useit.linetracker.model.ValueInsertRequest;
 import today.useit.linetracker.store.Stores;
@@ -11,6 +12,8 @@ import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +76,33 @@ public class ValuesHandler implements Handler {
 
     String postData = IOUtils.toString(exchange.getRequestBody(), "utf-8");
     ValueInsertRequest request = insertParser.fromJson(postData);
-    // TODO: parse into either 1 or many DateValues, insert into a store.
+
+    String bulkParam = request.bulk;
+    if (bulkParam != null && !"".equals(bulkParam.trim())) {
+      this.bulkInsert(id, bulkParam.trim());
+    } else {
+      this.singleInsert(id, request.time, request.value);
+    }
+
     return new JsonResponse("");
+  }
+
+  private void singleInsert(String id, String yyyymmdd, String value) {
+    try {
+      long ignore = DateFormat.dateToMs(yyyymmdd);
+      double valueAsNumber = Double.valueOf(value);
+      System.out.println("Insert " + valueAsNumber + " at " + yyyymmdd);
+      this.stores.valuesStore().addValuesToSingleLine(
+        id, Arrays.asList(new DatedValue(yyyymmdd, valueAsNumber))
+      );
+    } catch (ParseException pe) {
+      throw new IllegalArgumentException("Bad date format");
+    } catch (NumberFormatException nfe) {
+      throw new IllegalArgumentException("Bad value format");
+    }
+  }
+
+  private void bulkInsert(String id, String bulk) {
+    throw new UnsupportedOperationException();
   }
 }

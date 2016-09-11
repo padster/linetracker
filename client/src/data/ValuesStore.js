@@ -43,7 +43,7 @@ class ValuesStore {
       .fail(() => console.error("Couldn't load"));
   }
 
-  insert(fullID: String, values: List<Object>, callback: Function) {
+  insert(fullID: String, singleOrBulk: Object, callback: Function) {
     const path = this._fullIDToPath(fullID);
     if (path[0] !== 'single') {
       alert("oops. Should only insert values in basic lines.");
@@ -53,9 +53,11 @@ class ValuesStore {
       type: "POST",
       url: `${this.serverBase}/${fullID}`,
       dataType: 'json',
-      data: JSON.stringify(values),
+      data: JSON.stringify(singleOrBulk),
     }).done(data => {
-      callback(data);
+      // Need to clean everything, in case some calculated ones have changed :(
+      this.values = new Map();
+      this._triggerListeners(path);
     }).fail(() => {
       alert("Oops, cant create...");
     });
@@ -72,9 +74,9 @@ class ValuesStore {
       url: `${this.serverBase}/${fullID}/${dateYYYYMMDD}`,
       dataType: 'json'
     }).done(data => {
-      // HACK - improve.
-      this.values.delete(fullID);
-      // this._triggerListeners([id]);
+      // Need to clean everything, in case some calculated ones have changed :(
+      this.values = new Map();
+      this._triggerListeners(path);
     }).fail(() => {
       alert("Oops, cant delete...");
     });

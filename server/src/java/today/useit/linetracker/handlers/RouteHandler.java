@@ -85,6 +85,8 @@ public class RouteHandler implements HttpHandler {
       handleBadMethodException(exchange);
     } catch (UnauthorizedException e) {
       handleUnauthorized(exchange);
+    } catch (IllegalArgumentException e) {
+      handleBadArguments(exchange);
     } catch (Exception e) {
       handleServerException(exchange, e);
     }
@@ -174,16 +176,20 @@ public class RouteHandler implements HttpHandler {
     IOUtils.copy(response.stream, exchange.getResponseBody());
   }
 
+  void handleBadArguments(HttpExchange exchange) throws IOException {
+    exchange.sendResponseHeaders(400, 0);
+  }
+
+  void handleUnauthorized(HttpExchange exchange) throws IOException {
+    exchange.sendResponseHeaders(401, 0);
+  }
+
   void handleNotFoundException(HttpExchange exchange) throws IOException {
     exchange.sendResponseHeaders(404, 0);
   }
 
   void handleBadMethodException(HttpExchange exchange) throws IOException {
     exchange.sendResponseHeaders(405, 0);
-  }
-
-  void handleUnauthorized(HttpExchange exchange) throws IOException {
-    exchange.sendResponseHeaders(401, 0);
   }
 
   void handleServerException(HttpExchange exchange, Exception e) throws IOException {
