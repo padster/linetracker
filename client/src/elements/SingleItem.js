@@ -10,7 +10,8 @@ const moment = require('moment');
 
 class SingleItem extends Component {
   state: Object;
-  dispose: null;
+  disposeItem: null;
+  disposeValues: null;
 
   componentWillMount() {
     this.state = {
@@ -24,26 +25,31 @@ class SingleItem extends Component {
 
     // TODO - change dispose & re-listen on id change.
     this.dispose = Stores.singleStore.addListener(`${this.props.id}`, () => {
-      console.log("Changed!");
+      console.log("Item changed!");
+      this.forceUpdate();
+    });
+    this.disposeValues = Stores.valuesStore.addListener(`single/${this.props.id}`, () => {
+      console.log("Values changed!");
       this.forceUpdate();
     });
   }
 
   componentWillUnmount() {
-    this.dispose();
+    this.disposeItem();
+    this.disposeValues();
   }
 
   render() {
-    console.log("Rendering for " + this.props.id);
     const line = Stores.singleStore.get(this.props.id);
-    console.log("Loaded in view: %O", line);
+    const values = Stores.valuesStore.get(`single/${this.props.id}`);
+    console.log("Loaded line = %O, values = %O", line, values);
 
-    if (line === undefined) {
+    if (line === undefined || values === undefined) {
       return <LoadingIndicator />;
     }
 
     const viewGraphLink = '/view/single/' + line.id;
-    const noValuesMsg = line.values && line.values.length > 0 ? null :
+    const noValuesMsg = values && values.length > 0 ? null :
         "No values, please enter them below...";
     const handleNewValues = this.insertValues.bind(this, line.id);
     const handleSetLink = this.setLink.bind(this);
@@ -64,7 +70,7 @@ class SingleItem extends Component {
         </div>
 
         <ul className="singleList">
-          {line.values && line.values.map(value => {
+          {values && values.map(value => {
             const formattedDay = moment(value.t, 'YYYYMMDD').format('YYYY, MMM DD');
             const handleDelete = () => this.deleteValue(line, value);
             return (

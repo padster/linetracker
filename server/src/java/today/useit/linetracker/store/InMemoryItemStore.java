@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class BaseInMemoryItemStore<T extends HasId> implements ItemStore<T> {
+public class InMemoryItemStore<T extends HasId> implements ItemStore<T> {
   private final SortedMap<String, T> items = new TreeMap<String, T>();
 
   public List<T> listItems() {

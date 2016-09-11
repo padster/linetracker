@@ -8,6 +8,7 @@ class SingleStore extends ItemStore {
     super(serverBase: String);
   }
 
+  /* TODO - remove.
   addValues(id: string, values: Object, callback: Function) {
     window.$.ajax({
       type: "POST",
@@ -21,6 +22,7 @@ class SingleStore extends ItemStore {
       alert("Oops, cant create...");
     });
   }
+  */
 }
 
 export default SingleStore;

@@ -35,7 +35,7 @@ public class BindingModule extends AbstractModule {
     bindDataHandler("/compos/:id", GetComposHandler.class);
     bindDataHandler("/graphs/:id", GetGraphsHandler.class);
     bindDataHandler("/single/:id", GetSingleHandler.class);
-    bindDataHandler("/single/:id/values", SingleValuesHandler.class);
+    bindDataHandler("/values/:type/:id", ValuesHandler.class);
   }
 
   @Retention(RetentionPolicy.RUNTIME)

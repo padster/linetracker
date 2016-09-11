@@ -5,6 +5,7 @@
 class ItemStore {
   // Root path for handlers serving the data.
   serverBase: String;
+  idPrefix: String;
 
   listeners: Map;
 
@@ -17,8 +18,9 @@ class ItemStore {
   // Map id -> Timeseries datevalues for each item.
   // TODO
 
-  constructor(serverBase: String) {
+  constructor(serverBase: String, idPrefix: String) {
     this.serverBase = serverBase;
+    this.idPrefix = idPrefix;
     this.listeners = new Map();
     this.items = new Map();
     this.itemList = undefined;
@@ -50,6 +52,7 @@ class ItemStore {
     this.items.set(id, undefined); // HACK - use loading object.
     window.$.getJSON(`${this.serverBase}/${id}`)
       .done(data => {
+        this._insertFullID(data);
         this.items.set(id, data);
         this._triggerListeners([id]);
       })
@@ -63,6 +66,7 @@ class ItemStore {
     window.$.getJSON(`${this.serverBase}`)
       .done(data => {
         this.itemList = data;
+        this.itemList.forEach(this._insertFullID.bind(this))
         // NOTE: listeners for children not triggered
         this._triggerListeners([]);
       })
@@ -104,6 +108,10 @@ class ItemStore {
       const listeners = this.listeners.get(listenerPath) || [];
       listeners.forEach(listener => listener());
     }
+  }
+
+  _insertFullID(line: Object) {
+    line.fullID = `${this.idPrefix}/${line.id}`;
   }
 }
 

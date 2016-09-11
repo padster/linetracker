@@ -8,4 +8,5 @@ public interface Stores {
   ItemStore<SingleLineMeta> singleStore();
   ItemStore<ComposLineMeta> composStore();
   ItemStore<GraphsLineMeta> graphsStore();
+  ValuesStore valuesStore();
 }

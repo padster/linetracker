@@ -34,6 +34,10 @@ public class ParserModule extends AbstractModule {
       .toInstance(new JsonParserImpl<List<GraphsLineMeta>>(
         getProvider(Gson.class), new TypeToken<List<GraphsLineMeta>>(){}.getType()));
 
+    bind(new Key<JsonParser<List<DatedValue>>>(){})
+      .toInstance(new JsonParserImpl<List<DatedValue>>(
+        getProvider(Gson.class), new TypeToken<List<DatedValue>>(){}.getType()));
+
     bind(new Key<JsonParser<ValueInsertRequest>>(){})
       .toInstance(new JsonParserImpl<ValueInsertRequest>(
         getProvider(Gson.class), new TypeToken<ValueInsertRequest>(){}.getType()));
