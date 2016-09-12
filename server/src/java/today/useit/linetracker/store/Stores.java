@@ -9,4 +9,5 @@ public interface Stores {
   ItemStore<ComposLineMeta> composStore();
   ItemStore<GraphsLineMeta> graphsStore();
   ValuesStore valuesStore();
+  ChildStore childStore();
 }

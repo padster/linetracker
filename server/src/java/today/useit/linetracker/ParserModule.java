@@ -14,6 +14,7 @@ import java.util.List;
 /** Binds JSON parsers for all the models required. */
 public class ParserModule extends AbstractModule {
   @Override protected void configure() {
+    // TODO - clean up, make one line instead of three for each.
     bind(new Key<JsonParser<SingleLineMeta>>(){})
       .toInstance(new JsonParserImpl<SingleLineMeta>(
         getProvider(Gson.class), new TypeToken<SingleLineMeta>(){}.getType()));
@@ -41,5 +42,9 @@ public class ParserModule extends AbstractModule {
     bind(new Key<JsonParser<ValueInsertRequest>>(){})
       .toInstance(new JsonParserImpl<ValueInsertRequest>(
         getProvider(Gson.class), new TypeToken<ValueInsertRequest>(){}.getType()));
+
+    bind(new Key<JsonParser<EditChildrenRequest>>(){})
+      .toInstance(new JsonParserImpl<EditChildrenRequest>(
+        getProvider(Gson.class), new TypeToken<EditChildrenRequest>(){}.getType()));
   }
 }

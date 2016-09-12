@@ -11,11 +11,15 @@ public class InMemoryStores implements Stores {
   private final ItemStore<ComposLineMeta> composStore;
   private final ItemStore<GraphsLineMeta> graphsStore;
   private final CalculatingValuesStore    valuesStore;
+  private final ChildStore                 childStore;
 
   public InMemoryStores() {
+    this.childStore = new InMemoryChildStore();
     this.singleStore = new InMemoryItemStore<SingleLineMeta>();
-    this.composStore = new InMemoryItemStore<ComposLineMeta>();
-    this.graphsStore = new InMemoryItemStore<GraphsLineMeta>();
+    this.composStore = new ItemStoreWithChildren<ComposLineMeta>(
+      new InMemoryItemStore<ComposLineMeta>(), childStore, "compos");
+    this.graphsStore = new ItemStoreWithChildren<GraphsLineMeta>(
+      new InMemoryItemStore<GraphsLineMeta>(), childStore, "graphs");
     this.valuesStore = new CalculatingValuesStore(new InMemorySingleLineValuesStore(), composStore);
 
     SingleLineMeta sline = new SingleLineMeta();
@@ -31,14 +35,18 @@ public class InMemoryStores implements Stores {
 
     ComposLineMeta cline = new ComposLineMeta();
     cline.name = "compos store"; cline.op = "plus";
-    cline.childMetadata.add(new ChildEntry("s", sline.id));
     cline = this.composStore.createItem(cline);
+    this.childStore.addChildren("compos/" + cline.id, Arrays.asList(
+      new ChildEntry("single", sline.id)
+    ));
 
     GraphsLineMeta gline = new GraphsLineMeta();
     gline.name = "graph store";
-    gline.childMetadata.add(new ChildEntry("c", cline.id));
-    gline.childMetadata.add(new ChildEntry("s", sline.id));
     gline = this.graphsStore.createItem(gline);
+    this.childStore.addChildren("graphs/" + gline.id, Arrays.asList(
+      new ChildEntry("compos", cline.id),
+      new ChildEntry("single", sline.id)
+    ));
   }
 
   public ItemStore<SingleLineMeta> singleStore() {
@@ -52,5 +60,8 @@ public class InMemoryStores implements Stores {
   }
   public ValuesStore valuesStore() {
     return this.valuesStore;
+  }
+  public ChildStore childStore() {
+    return this.childStore;
   }
 }

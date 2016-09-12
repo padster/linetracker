@@ -86,7 +86,7 @@ class ItemStore {
     });
   }
 
-  delete(id: string) {
+  delete(id: String) {
     window.$.ajax({
       type: "DELETE",
       url: `${this.serverBase}/${id}`,
@@ -99,6 +99,12 @@ class ItemStore {
     }).fail(() => {
       alert("Oops, cant delete...");
     });
+  }
+
+  clearCacheForItem(id: String) {
+    this.items.delete(id);
+    this.itemList = undefined;
+    this._triggerListeners([id]);
   }
 
   // HACK - remove

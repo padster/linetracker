@@ -77,12 +77,11 @@ class GraphsItem extends Component {
           </div>
 
           <ul className="singleList">
-            {childrenWithNames.map(child => {
+            {childrenWithNames.map((child, i) => {
               const handleDelete = this.deleteChild.bind(this, line, child);
-              const childType = child.type === 's' ? 'single' : 'compos'; // Only two so far.
-              const childLink = `/${childType}/${child.id}`;
+              const childLink = `/${child.type}/${child.id}`;
               return (
-                <li key={child.id}><div className="trow">
+                <li key={i}><div className="trow">
                   <div className="listingName">
                     <a href={childLink}>{child.name}</a>
                   </div>
@@ -112,7 +111,7 @@ class GraphsItem extends Component {
         <ChildPickerModal
           show={this.state.addLineOpen}
           onHide={() => this.setState({addLineOpen: false})}
-          onPick={(children) => console.log('TODO: add ' + window.JSON.stringify(children))}
+          onPick={this.addChildren.bind(this, line.fullID)}
         />
       </div>
     );
@@ -122,8 +121,24 @@ class GraphsItem extends Component {
     console.log(`TODO: change name to ${name}`);
   }
 
+  addChildren(fullID: String, children: Array<String>) {
+    const asEntries = children.map(child => {
+      const childParts = child.split('/');
+      return {
+        type: childParts[0],
+        id: childParts[1],
+      };
+    })
+    Stores.childStore.addChildren(fullID, asEntries);
+  }
+
   deleteChild(line, child) {
     console.log("Deleting %O from %O", child, line);
+    const asEntry = {
+      type: child.type,
+      id: child.id,
+    };
+    Stores.childStore.removeChild(line.fullID, asEntry);
   }
 }
 

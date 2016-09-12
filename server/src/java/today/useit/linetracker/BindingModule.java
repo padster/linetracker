@@ -37,6 +37,7 @@ public class BindingModule extends AbstractModule {
     bindDataHandler("/single/:id", GetSingleHandler.class);
     bindDataHandler("/values/:type/:id", ValuesHandler.class);
     bindDataHandler("/values/single/:id/:yyyymmdd", DatedValueHandler.class);
+    bindDataHandler("/:type/:id/children", EditChildrenHandler.class);
   }
 
   @Retention(RetentionPolicy.RUNTIME)

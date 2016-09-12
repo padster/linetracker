@@ -3,7 +3,7 @@ package today.useit.linetracker.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphsLineMeta implements HasId {
+public class GraphsLineMeta implements HasId, HasChildren {
   public String id;
   public String name;
   public List<ChildEntry> childMetadata = new ArrayList<>();
@@ -14,6 +14,14 @@ public class GraphsLineMeta implements HasId {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public List<ChildEntry> children() {
+    return this.childMetadata;
+  }
+
+  public void setChildren(List<ChildEntry> children) {
+    this.childMetadata = children;
   }
 
   @Override public int hashCode() {

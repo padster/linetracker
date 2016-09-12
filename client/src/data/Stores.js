@@ -1,6 +1,7 @@
 // HACK - remove before deploy, pass server location from server.
 const SERVER_DATA_PREFIX = 'http://localhost:8080/_';
 
+import ChildStore from './ChildStore.js';
 import ItemStore from './ItemStore.js';
 import ValuesStore from './ValuesStore.js';
 
@@ -13,7 +14,6 @@ const Stores = {
 
   // MEGA HACK - assumes compos
   lookUpChildNames(childIds: Array<Object>): Array<Object> {
-    console.log('looking up children');
     const allSingle = this.singleStore.list();
     const allCompos = this.composStore.list();
     if (allSingle === undefined || allCompos === undefined) {
@@ -21,15 +21,18 @@ const Stores = {
     }
     return childIds.map(child => {
       let line = undefined;
-      if (child.type === "s") {
+      if (child.type === "single") {
         line = allSingle.find(s => s.id === child.id);
-      } else if (child.type === "c") {
+      } else if (child.type === "compos") {
         line = allCompos.find(s => s.id === child.id);
       }
+      console.log(line);
       const name = line === undefined ? '???' : line.name;
       return {...child, name};
     });
   }
 };
+
+Stores.childStore = new ChildStore(SERVER_DATA_PREFIX, Stores.composStore, Stores.graphsStore);
 
 export default Stores;
