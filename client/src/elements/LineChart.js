@@ -13,22 +13,6 @@ const FIXED_OPTIONS = {
   legend: { show: true, position: 'nw' }
 };
 
-// HACK
-const TEST_DATA = [{
-  name: 'hello',
-  link: 'http://www.example.com',
-  values: [{
-    t: '20160831',
-    v: 121,
-  }, {
-    t: '20160901',
-    v: 123.6,
-  }, {
-    t: '20160902',
-    v: 121.6,
-  }],
-}];
-
 class LineChart extends Component {
   componentDidMount() {
     this.drawChart();
@@ -46,15 +30,14 @@ class LineChart extends Component {
   }
 
   drawChart() {
-    const asLines = this.convertDataToFlot();
+    const asLines = this.convertDataToFlot(this.props.lines);
     const options = this.buildOptions(asLines);
     window.$.plot(this.graph, asLines, options);
   }
 
-  convertDataToFlot() {
+  convertDataToFlot(lines) {
     // M.trimFirstZerosInPlace(data)
-    const data = TEST_DATA;
-    let asLines = data.map(function(x) { return {
+    let asLines = lines.map(function(x) { return {
       'label': x.name,
       'data': x.values.map(function(y) { return [moment(y.t, 'YYYYMMDD'), y.v]; })
     }});

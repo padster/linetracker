@@ -24,7 +24,7 @@ class SingleItem extends Component {
     };
 
     // TODO - change dispose & re-listen on id change.
-    this.dispose = Stores.singleStore.addListener(`${this.props.id}`, () => {
+    this.disposeItem = Stores.singleStore.addListener(`${this.props.id}`, () => {
       console.log("Item changed!");
       this.forceUpdate();
     });

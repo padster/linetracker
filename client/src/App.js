@@ -7,6 +7,7 @@ import ComposList from './elements/ComposList.js';
 import GraphsItem from './elements/GraphsItem.js';
 import GraphsList from './elements/GraphsList.js';
 import HomePage from './elements/HomePage.js';
+import SingleChart from './elements/SingleChart.js';
 import SingleItem from './elements/SingleItem.js';
 import SingleList from './elements/SingleList.js';
 
@@ -33,17 +34,6 @@ class App extends Component {
             {this.renderContent()}
           </div>
         </div>
-        {/* TODO: Loading indicator
-        <div id='loading'>
-          <div className='spinner'>
-            <div className='rect1'></div>
-            <div className='rect2'></div>
-            <div className='rect3'></div>
-            <div className='rect4'></div>
-            <div className='rect5'></div>
-          </div>
-        </div>
-        */}
       </div>
     );
   }
@@ -74,6 +64,18 @@ class App extends Component {
         case 'graphs':
           return <GraphsItem id={pathParts[1]} />;
         default: // no-op
+      }
+    } else if (pathParts.length === 3) {
+      if (pathParts[0] === "view") {
+        switch (pathParts[1]) {
+          case 'single':
+            return <SingleChart id={pathParts[2]} />;
+          // case 'compos':
+            // return <ComposChart id={pathParts[1]} />;
+          // case 'graphs':
+            // return <GraphsChart id={pathParts[1]} />;
+          default: // no-op
+        }
       }
     }
     return "Hmm, need to render";
