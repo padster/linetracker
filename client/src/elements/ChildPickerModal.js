@@ -30,7 +30,10 @@ class ChildPickerModal extends Component {
 
   render() {
     const singleLines = Stores.singleStore.list();
-    const composLines = Stores.composStore.list();
+    // Don't include a line in its own list, if the parent is a composite line.
+    const composLines = Stores.composStore.list().filter(
+      line => line.fullID !== this.props.filterLine
+    );
 
     const content = (singleLines === undefined || composLines === undefined)
       ? this.renderLoading()

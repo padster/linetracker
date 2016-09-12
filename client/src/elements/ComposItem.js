@@ -112,6 +112,7 @@ class ComposItem extends Component {
           show={this.state.addLineOpen}
           onHide={() => this.setState({addLineOpen: false})}
           onPick={this.addChildren.bind(this, line.fullID)}
+          filterLine={line.fullID}
         />
       </div>
     );
