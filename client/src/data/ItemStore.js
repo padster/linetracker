@@ -42,7 +42,7 @@ class ItemStore {
       return null;
     }
     this.listeners.get(path).add(listener);
-    return () => this.listeners.get(path).remove(listener);
+    return () => this.listeners.get(path).delete(listener);
   }
 
   get(id: string): ?Object {
@@ -100,6 +100,9 @@ class ItemStore {
       alert("Oops, cant delete...");
     });
   }
+
+  // HACK - remove
+  triggerListeners(path) { this._triggerListeners(path); }
 
   _triggerListeners(path) {
     for (let i = path.length; i >= 0; i--) {

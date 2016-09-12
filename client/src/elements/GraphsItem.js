@@ -9,6 +9,10 @@ class GraphsItem extends Component {
   state: Object;
   dispose: null;
 
+  // Needed to look up child names.
+  disposeSingleList: null;
+  disposeComposList: null;
+
   componentWillMount() {
     this.state = {
       editNameOpen: false,
@@ -19,9 +23,19 @@ class GraphsItem extends Component {
       console.log("Changed!");
       this.forceUpdate();
     });
+    this.disposeSingleList = Stores.singleStore.addListener('', () => {
+      console.log("Single list updated!");
+      this.forceUpdate();
+    });
+    this.disposeComposList = Stores.composStore.addListener('', () => {
+      console.log("Compos list updated!");
+      this.forceUpdate();
+    });
   }
 
   componentWillUnmount() {
+    this.disposeComposList();
+    this.disposeSingleList();
     this.dispose();
   }
 
@@ -31,6 +45,11 @@ class GraphsItem extends Component {
     console.log("Loaded in view: %O", line);
 
     if (line === undefined) {
+      return <LoadingIndicator />;
+    }
+
+    const childrenWithNames = Stores.lookUpChildNames(line.childMetadata);
+    if (childrenWithNames === undefined) {
       return <LoadingIndicator />;
     }
 
@@ -54,9 +73,10 @@ class GraphsItem extends Component {
           </div>
 
           <ul className="singleList">
-            {line.childMetadata.map(child => {
+            {childrenWithNames.map(child => {
               const handleDelete = this.deleteChild.bind(this, line, child);
-              const childLink = '/single/' + child.id; // HACK
+              const childType = child.type === 's' ? 'single' : 'compos'; // Only two so far.
+              const childLink = `/${childType}/${child.id}`;
               return (
                 <li key={child.id}><div className="trow">
                   <div className="listingName">

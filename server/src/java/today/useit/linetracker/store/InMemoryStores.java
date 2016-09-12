@@ -19,7 +19,7 @@ public class InMemoryStores implements Stores {
     this.valuesStore = new CalculatingValuesStore(new InMemorySingleLineValuesStore(), composStore);
 
     SingleLineMeta sline = new SingleLineMeta();
-    sline.id = "abcd1234"; sline.name = "single store";
+    sline.name = "single store";
     sline.link = "http://www.example.com/working";
     sline = this.singleStore.createItem(sline);
 
@@ -30,14 +30,14 @@ public class InMemoryStores implements Stores {
     ));
 
     ComposLineMeta cline = new ComposLineMeta();
-    cline.id = "1a2b3c4d"; cline.name = "compos store"; cline.op = "plus";
-    cline.childMetadata.add(new ChildEntry("abcd1234", "hello store"));
+    cline.name = "compos store"; cline.op = "plus";
+    cline.childMetadata.add(new ChildEntry("s", sline.id));
     cline = this.composStore.createItem(cline);
 
     GraphsLineMeta gline = new GraphsLineMeta();
-    gline.id = "1234abcd"; gline.name = "graph store";
-    gline.childMetadata.add(new ChildEntry("1a2b3c4d", "compos store"));
-    gline.childMetadata.add(new ChildEntry("abcd1234", "hello store"));
+    gline.name = "graph store";
+    gline.childMetadata.add(new ChildEntry("c", cline.id));
+    gline.childMetadata.add(new ChildEntry("s", sline.id));
     gline = this.graphsStore.createItem(gline);
   }
 
