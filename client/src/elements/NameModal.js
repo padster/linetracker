@@ -31,7 +31,7 @@ class NameModal extends Component {
             <input type="text" value={inputValue} onChange={changeValue}></input>
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="primary" disabled={disableSave} onClick={this.handleSubmit.bind(this)}>
+          <Button className="btn-flex" bsStyle="primary" disabled={disableSave} onClick={this.handleSubmit.bind(this)}>
             <i className="material-icons">add</i> Change
           </Button>
           <Button className="btn-flex" onClick={this.props.onHide}>
@@ -45,7 +45,7 @@ class NameModal extends Component {
   handleSubmit() {
     this.props.onChange(this.state.nameOverride);
     this.props.onHide();
-    this.setState({nameOverride: null})
+    this.setState({nameOverride: null});
   }
 }
 

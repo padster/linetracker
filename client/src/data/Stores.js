@@ -19,8 +19,6 @@ const Stores = {
     if (allSingle === undefined || allCompos === undefined) {
       return undefined;
     }
-    console.log('Have everything for children');
-    console.log(allSingle);
     return childIds.map(child => {
       let line = undefined;
       if (child.type === "s") {
@@ -28,7 +26,6 @@ const Stores = {
       } else if (child.type === "c") {
         line = allCompos.find(s => s.id === child.id);
       }
-      console.log(window.JSON.stringify(child) + " => " + window.JSON.stringify(line));
       const name = line === undefined ? '???' : line.name;
       return {...child, name};
     });

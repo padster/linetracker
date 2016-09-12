@@ -35,16 +35,21 @@ ul.controls {
 
 .controlItem {
   padding-left: 10px;
+  width: 100%;
+}
+.controlItem label {
+  cursor: pointer;
 }
 
-form[name="namePicker"] {
+.modal-body {
   margin-bottom: 0;
 }
-form[name="namePicker"] ul {
+.modal-body ul {
   margin-bottom: 0;
 }
-form[name="namePicker"] .namePickerBox {
+.modal-body .namePickerBox {
   margin-top: 0;
+  margin-right: 6px;
 }
 
 /* Optional, remove if needed. */
@@ -325,7 +330,7 @@ label {
 }
 
 /* Material design icon font: http://google.github.io/material-design-icons */
-.btn.btn-mini, .btn.btn-primary, button.btn, .listStar {
+.btn.btn-mini, .btn.btn-primary, button.btn-flex, .listStar {
   display: flex;
   margin: 3px 0;
   padding: 2px;

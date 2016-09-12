@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Button } from 'react-bootstrap';
 
+import ChildPickerModal from './ChildPickerModal.js';
 import LoadingIndicator from './LoadingIndicator.js';
 import NameModal from './NameModal.js';
 
@@ -15,6 +17,7 @@ class ComposItem extends Component {
 
   componentWillMount() {
     this.state = {
+      addLineOpen: false,
       editNameOpen: false,
     };
 
@@ -56,6 +59,7 @@ class ComposItem extends Component {
     const viewGraphLink = '/view/compos/' + line.id;
     const noChildrenMsg = line.childMetadata.length > 0 ? null :
         "No lines, please add some below...";
+    const openAddLine = () => this.setState({addLineOpen: true});
     const openEditName = () => this.setState({editNameOpen: true});
 
     return (
@@ -75,7 +79,8 @@ class ComposItem extends Component {
           <ul className="singleList">
             {childrenWithNames.map(child => {
               const handleDelete = this.deleteChild.bind(this, line, child);
-              const childLink = '/single/' + child.id; // HACK
+              const childType = child.type === 's' ? 'single' : 'compos'; // Only two so far.
+              const childLink = `/${childType}/${child.id}`;
               return (
                 <li key={child.id}><div className="trow">
                   <div className="listingName">
@@ -95,9 +100,7 @@ class ComposItem extends Component {
         </div>
 
         <hr className="fancy" />
-        <div>
-          <a href="#valueList" className="btn" data-toggle="modal">Add line</a>
-        </div>
+        <Button onClick={openAddLine}>Add line</Button>
 
         <NameModal
           defaultValue={line.name}
@@ -106,7 +109,11 @@ class ComposItem extends Component {
           onChange={this.changeName.bind(this)}
         />
 
-        {/* TODO: UI for adding a line */}
+        <ChildPickerModal
+          show={this.state.addLineOpen}
+          onHide={() => this.setState({addLineOpen: false})}
+          onPick={(children) => console.log('TODO: add ' + window.JSON.stringify(children))}
+        />
       </div>
     );
   }
