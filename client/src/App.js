@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import AllInputsList from './elements/AllInputsList.js';
+import ComposChart from './elements/ComposChart.js';
 import ComposItem from './elements/ComposItem.js';
 import ComposList from './elements/ComposList.js';
 import GraphsItem from './elements/GraphsItem.js';
@@ -70,10 +71,10 @@ class App extends Component {
         switch (pathParts[1]) {
           case 'single':
             return <SingleChart id={pathParts[2]} />;
-          // case 'compos':
-            // return <ComposChart id={pathParts[1]} />;
+          case 'compos':
+            return <ComposChart id={pathParts[2]} />;
           // case 'graphs':
-            // return <GraphsChart id={pathParts[1]} />;
+            // return <GraphsChart id={pathParts[2]} />;
           default: // no-op
         }
       }

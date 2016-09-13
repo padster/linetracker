@@ -34,9 +34,11 @@ class ValuesStore {
     if (this.values.has(fullID)) {
       return this.values.get(fullID);
     }
+    console.log("GETTING VALUES FOR " + fullID);
     this.values.set(fullID, undefined); // HACK - use loading object.
     window.$.getJSON(`${this.serverBase}/${fullID}`)
       .done(data => {
+        console.log("GOT! %O", data);
         this.values.set(fullID, data);
         this._triggerListeners(path);
       })
@@ -93,7 +95,7 @@ class ValuesStore {
 
   _fullIDToPath(fullID: String): Array<String> {
     const path = fullID.split('/');
-    if (path.length !== 2 || !(path[0] === 'single' || path[1] === 'compos')) {
+    if (path.length !== 2 || !(path[0] === 'single' || path[0] === 'compos')) {
       alert("Whoops! Value full ID wrong, This shouldn't happen...");
     }
     return path;

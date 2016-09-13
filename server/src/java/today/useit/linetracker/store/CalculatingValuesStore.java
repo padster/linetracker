@@ -17,15 +17,19 @@ import java.util.stream.Collectors;
 public class CalculatingValuesStore implements ValuesStore {
   private final SingleLineValuesStore singleListValuesStore;
   private final ItemStore<ComposLineMeta> composStore;
+  private final ChildStore childStore;
 
+  // TODO - request scoped, this isn't cleared properly.
   private final Map<String, SortedSet<DatedValue>> composCache = new HashMap<>();
 
   public CalculatingValuesStore(
     SingleLineValuesStore singleListValuesStore,
-    ItemStore<ComposLineMeta> composStore
+    ItemStore<ComposLineMeta> composStore,
+    ChildStore childStore
   ) {
     this.singleListValuesStore = singleListValuesStore;
     this.composStore = composStore;
+    this.childStore = childStore;
   }
 
   public List<DatedValue> valuesForSingle(String id) {
@@ -59,16 +63,13 @@ public class CalculatingValuesStore implements ValuesStore {
     ComposLineMeta lineMeta = this.composStore.getItem(id);
     CompositeOperation op = CompositeOperation.fromText(lineMeta.op);
 
-    List<SortedSet<DatedValue>> childData = lineMeta.childMetadata
+    List<SortedSet<DatedValue>> childData = childStore.getChildren("compos/" + id)
       .stream()
       .map(child -> {
-        String[] parts = child.id.split("/");
-        if (parts.length == 2) {
-          if ("single".equals(parts[0])) {
-            return this.valueSetForSingle(parts[1]);
-          } else if ("compos".equals(parts[1])) {
-            return this.valueSetForCompos(parts[1]);
-          }
+        if ("single".equals(child.type)) {
+          return this.valueSetForSingle(child.id);
+        } else if ("compos".equals(child.type)) {
+          return this.valueSetForCompos(child.id);
         }
         return new TreeSet<DatedValue>();
       })

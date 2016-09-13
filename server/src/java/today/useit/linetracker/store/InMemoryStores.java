@@ -20,7 +20,8 @@ public class InMemoryStores implements Stores {
       new InMemoryItemStore<ComposLineMeta>(), childStore, "compos");
     this.graphsStore = new ItemStoreWithChildren<GraphsLineMeta>(
       new InMemoryItemStore<GraphsLineMeta>(), childStore, "graphs");
-    this.valuesStore = new CalculatingValuesStore(new InMemorySingleLineValuesStore(), composStore);
+    this.valuesStore = new CalculatingValuesStore(
+      new InMemorySingleLineValuesStore(), composStore, childStore);
 
     SingleLineMeta sline = new SingleLineMeta();
     sline.name = "single store";
