@@ -5,6 +5,7 @@ import AllInputsList from './elements/AllInputsList.js';
 import ComposChart from './elements/ComposChart.js';
 import ComposItem from './elements/ComposItem.js';
 import ComposList from './elements/ComposList.js';
+import GraphsChart from './elements/GraphsChart.js';
 import GraphsItem from './elements/GraphsItem.js';
 import GraphsList from './elements/GraphsList.js';
 import HomePage from './elements/HomePage.js';
@@ -73,8 +74,8 @@ class App extends Component {
             return <SingleChart id={pathParts[2]} />;
           case 'compos':
             return <ComposChart id={pathParts[2]} />;
-          // case 'graphs':
-            // return <GraphsChart id={pathParts[2]} />;
+          case 'graphs':
+            return <GraphsChart id={pathParts[2]} />;
           default: // no-op
         }
       }

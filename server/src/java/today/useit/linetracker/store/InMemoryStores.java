@@ -38,6 +38,7 @@ public class InMemoryStores implements Stores {
     cline.name = "compos store"; cline.op = "plus";
     cline = this.composStore.createItem(cline);
     this.childStore.addChildren("compos/" + cline.id, Arrays.asList(
+      new ChildEntry("single", sline.id),
       new ChildEntry("single", sline.id)
     ));
 
