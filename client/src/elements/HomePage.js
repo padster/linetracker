@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 
-// import ExponentialLiveValue from './ExponentialLiveValue.js';
+import ExponentialLiveValue from './ExponentialLiveValue.js';
 import LineChart from './LineChart.js';
 import LoadingIndicator from './LoadingIndicator.js';
 
+import ExponentialFit from '../data/ExponentialFit.js';
 import Stores from '../data/Stores.js';
+
+const moment = require('moment');
 
 /*
 const TEST_DATA = [{
@@ -88,30 +91,27 @@ class HomePage extends Component {
       return <LoadingIndicator />;
     }
 
-    return <LineChart lines={childLines}/>;
-
-    /*
-    const estimates = TEST_DATA;
-
     return (
       <div>
         <div className="totalEstimate navbar-inner">
-          {estimates.map(line => {
+          {childLines.map((line, i) => {
+            const valuesAsXY = line.values.map(p => {
+              return [moment(p.t, 'YYYYMMDD').valueOf(), p.v];
+            })
+            const expFit = ExponentialFit.bestFitCoeffs(valuesAsXY);
             return (
-              <div key={line.id} className="estimateRow">
+              <div key={i} className="estimateRow">
                 {line.name}
-                <ExponentialLiveValue a={line.fit[0]} b={line.fit[1]} c={line.fit[2]} />
+                <ExponentialLiveValue a={expFit[0]} b={expFit[1]} c={expFit[2]} />
                 <div className="clear" />
               </div>
             );
           })}
-          {noLinesMsg}
         </div>
 
-        {this.maybeDrawGraph(estimates)}
+        {this.maybeDrawGraph(childLines)}
       </div>
     );
-    */
   }
 
   renderNoHomeGraphMsg() {
@@ -124,11 +124,11 @@ class HomePage extends Component {
     );
   }
 
-  maybeDrawGraph(estimates) {
-    if (estimates.length === 0) {
+  maybeDrawGraph(childLines) {
+    if (childLines.length === 0) {
       return null;
     }
-    return <LineChart />;
+    return <LineChart lines={childLines}/>;
   }
 }
 
