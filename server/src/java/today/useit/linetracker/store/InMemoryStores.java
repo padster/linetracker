@@ -12,6 +12,7 @@ public class InMemoryStores implements Stores {
   private final ItemStore<GraphsLineMeta> graphsStore;
   private final CalculatingValuesStore    valuesStore;
   private final ChildStore                 childStore;
+  private final SettingsStore           settingsStore;
 
   public InMemoryStores() {
     this.childStore = new InMemoryChildStore();
@@ -22,6 +23,7 @@ public class InMemoryStores implements Stores {
       new InMemoryItemStore<GraphsLineMeta>(), childStore, "graphs");
     this.valuesStore = new CalculatingValuesStore(
       new InMemorySingleLineValuesStore(), composStore, childStore);
+    this.settingsStore = new InMemorySettingsStore();
 
     SingleLineMeta sline = new SingleLineMeta();
     sline.name = "single store";
@@ -49,6 +51,14 @@ public class InMemoryStores implements Stores {
       new ChildEntry("compos", cline.id),
       new ChildEntry("single", sline.id)
     ));
+
+    GraphsLineMeta gline2 = new GraphsLineMeta();
+    gline2.name = "home graph";
+    gline2 = this.graphsStore.createItem(gline2);
+    this.childStore.addChildren("graphs/" + gline2.id, Arrays.asList(
+      new ChildEntry("single", sline.id)
+    ));
+
   }
 
   public ItemStore<SingleLineMeta> singleStore() {
@@ -65,5 +75,8 @@ public class InMemoryStores implements Stores {
   }
   public ChildStore childStore() {
     return this.childStore;
+  }
+  public SettingsStore settingsStore() {
+    return this.settingsStore;
   }
 }

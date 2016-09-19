@@ -7,6 +7,7 @@ import Stores from '../data/Stores.js';
 
 class GraphsList extends Component {
   dispose: null;
+  disposeSettings: null;
 
   componentWillMount() {
     // TODO - change dispose & re-listen on id change.
@@ -14,10 +15,15 @@ class GraphsList extends Component {
       console.log("Changed!");
       this.forceUpdate();
     });
+    this.disposeSettings = Stores.settingsStore.addListener('', () => {
+      console.log("Settings changed!");
+      this.forceUpdate();
+    });
   }
 
   componentWillUnmount() {
     this.dispose();
+    this.disposeSettings();
   }
 
   render() {
@@ -26,6 +32,11 @@ class GraphsList extends Component {
     console.log("Loaded in view: %O", lines);
 
     if (lines === undefined) {
+      return <LoadingIndicator />;
+    }
+
+    const settings = Stores.settingsStore.get();
+    if (settings === undefined) {
       return <LoadingIndicator />;
     }
 
@@ -39,16 +50,17 @@ class GraphsList extends Component {
           <ul className="singlelist">
             {lines.map(line => {
               const url = 'graphs/' + line.id;
+              const isHome = line.id === settings.homeID;
               const deleteHandler = this.delete.bind(this, line);
-              const starHandler = this.star.bind(this, line);
+              const starHandler = this.star.bind(this, line, settings);
               return (
                 <li key={line.id}><div className="trow">
                   <div className="listingName"><a href={url}>{line.name}</a></div>
                   <div className="flex-spacer"></div>
                   <a className="listStar" title="Set Home Graph" onClick={starHandler}>
-                    {line.isHome ? <i className="material-icons">star</i> : null}
-                    {line.isHome ? null : <i className="material-icons starNormal">star_border</i>}
-                    {line.isHome ? null : <i className="material-icons starHover">star_half</i>}
+                    {isHome ? <i className="material-icons">star</i> : null}
+                    {isHome ? null : <i className="material-icons starNormal">star_border</i>}
+                    {isHome ? null : <i className="material-icons starHover">star_half</i>}
                   </a>
                   <div className="listingActions">
                     <a className="btn btn-mini listRemove" title="Delete" onClick={deleteHandler}>
@@ -82,9 +94,10 @@ class GraphsList extends Component {
     }
   }
 
-  star(line) {
+  star(line, settings) {
     console.log("Starring....");
-    console.log(line);
+    settings.homeID = line.id;
+    Stores.settingsStore.update(settings);
   }
 }
 

@@ -10,4 +10,5 @@ public interface Stores {
   ItemStore<GraphsLineMeta> graphsStore();
   ValuesStore valuesStore();
   ChildStore childStore();
+  SettingsStore settingsStore();
 }

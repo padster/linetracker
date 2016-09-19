@@ -46,5 +46,10 @@ public class ParserModule extends AbstractModule {
     bind(new Key<JsonParser<EditChildrenRequest>>(){})
       .toInstance(new JsonParserImpl<EditChildrenRequest>(
         getProvider(Gson.class), new TypeToken<EditChildrenRequest>(){}.getType()));
+
+    bind(new Key<JsonParser<Settings>>(){})
+      .toInstance(new JsonParserImpl<Settings>(
+        getProvider(Gson.class), new TypeToken<Settings>(){}.getType()));
+
   }
 }
