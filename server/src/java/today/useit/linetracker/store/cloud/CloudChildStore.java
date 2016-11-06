@@ -3,10 +3,18 @@ package today.useit.linetracker.store.cloud;
 import today.useit.linetracker.model.*;
 import today.useit.linetracker.store.ChildStore;
 
+import com.google.cloud.datastore.Datastore;
+
 import java.util.List;
 import java.util.Map;
 
 public class CloudChildStore implements ChildStore {
+  private final Datastore db;
+
+  public CloudChildStore(Datastore db) {
+    this.db = db;
+  }
+
   public Map<String, List<ChildEntry>> allChildrenForType(String type) {
     // TODO
     return null;
