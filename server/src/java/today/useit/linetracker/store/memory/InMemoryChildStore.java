@@ -12,10 +12,11 @@ public class InMemoryChildStore implements ChildStore {
   // type, id, children
   private final Map<String, Map<String, List<ChildEntry>>> entries = new HashMap<>();
 
-  public Map<String, List<ChildEntry>> allChildrenForType(String type) {
+  public Map<String, List<ChildEntry>> allChildrenForTypeAndIDs(String type, List<String> ids) {
     if (!entries.containsKey(type)) {
       entries.put(type, new HashMap<String, List<ChildEntry>>());
     }
+    // NOTE: just return everything, don't bother filtering by needed IDs.
     return entries.get(type);
   }
 

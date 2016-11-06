@@ -15,7 +15,7 @@ public class CloudChildStore implements ChildStore {
     this.db = db;
   }
 
-  public Map<String, List<ChildEntry>> allChildrenForType(String type) {
+  public Map<String, List<ChildEntry>> allChildrenForTypeAndIDs(String type, List<String> ids) {
     // TODO
     return null;
   }

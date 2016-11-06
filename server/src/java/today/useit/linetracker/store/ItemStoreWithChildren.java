@@ -7,6 +7,7 @@ import today.useit.linetracker.model.HasId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ItemStoreWithChildren<T extends HasChildren & HasId> implements ItemStore<T> {
   private final ItemStore<T> base;
@@ -21,7 +22,9 @@ public class ItemStoreWithChildren<T extends HasChildren & HasId> implements Ite
 
   public List<T> listItems() {
     List<T> items = this.base.listItems();
-    final Map<String, List<ChildEntry>> allChildren = childStore.allChildrenForType(type);
+    final List<String> allIDs = items.stream().map(item -> item.id()).collect(Collectors.toList());
+    final Map<String, List<ChildEntry>> allChildren =
+      childStore.allChildrenForTypeAndIDs(type, allIDs);
     items.forEach(item -> {
       List<ChildEntry> children = allChildren.get(item.id());
       item.setChildren(children != null ? children : new ArrayList<>());
