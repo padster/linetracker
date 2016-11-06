@@ -1,6 +1,8 @@
-package today.useit.linetracker.store;
+package today.useit.linetracker.store.memory;
 
 import today.useit.linetracker.model.HasId;
+import today.useit.linetracker.store.ItemStore;
+import today.useit.linetracker.store.IdGen;
 
 import java.util.ArrayList;
 import java.util.List;

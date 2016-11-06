@@ -1,6 +1,7 @@
-package today.useit.linetracker.store;
+package today.useit.linetracker.store.memory;
 
 import today.useit.linetracker.model.DatedValue;
+import today.useit.linetracker.store.SingleLineValuesStore;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,6 +1,7 @@
-package today.useit.linetracker.store;
+package today.useit.linetracker.store.memory;
 
 import today.useit.linetracker.model.*;
+import today.useit.linetracker.store.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

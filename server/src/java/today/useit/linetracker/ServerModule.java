@@ -3,7 +3,7 @@ package today.useit.linetracker;
 import today.useit.linetracker.BindingModule.Bindings;
 import today.useit.linetracker.BindingModule.ServerPort;
 import today.useit.linetracker.handlers.RouteHandler;
-import today.useit.linetracker.store.InMemoryStores;
+import today.useit.linetracker.store.memory.InMemoryStores;
 import today.useit.linetracker.store.Stores;
 
 import com.google.inject.AbstractModule;
