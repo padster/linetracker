@@ -12,3 +12,4 @@ client/npm-debug.log
 server/target
 server/debug.log
 server/debug.log.lck
+server/cloudstore

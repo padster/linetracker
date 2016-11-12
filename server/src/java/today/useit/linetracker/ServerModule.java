@@ -38,6 +38,8 @@ public class ServerModule extends AbstractModule {
     bind(Integer.class).annotatedWith(ServerPort.class).toInstance(this.port);
 
     if (cloudStore) {
+      System.out.println(String.format("\nUsing storage at: %s",
+        System.getenv().get("DATASTORE_EMULATOR_HOST")));
       Datastore db = DatastoreOptions.defaultInstance().service();
       bind(Datastore.class).toInstance(db);
       bind(Stores.class).to(CloudStores.class).asEagerSingleton();

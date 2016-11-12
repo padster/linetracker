@@ -17,11 +17,11 @@ public class CloudStores implements Stores {
 
   @Inject public CloudStores(Datastore db) {
     this.childStore = new CloudChildStore(db);
-    this.singleStore = new CloudItemStore<SingleLineMeta>(db);
+    this.singleStore = new CloudItemStoreSingle(db);
     this.composStore = new ItemStoreWithChildren<ComposLineMeta>(
-      new CloudItemStore<ComposLineMeta>(db), childStore, "compos");
+      new CloudItemStoreCompos(db), childStore, "compos");
     this.graphsStore = new ItemStoreWithChildren<GraphsLineMeta>(
-      new CloudItemStore<GraphsLineMeta>(db), childStore, "graphs");
+      new CloudItemStoreGraphs(db), childStore, "graphs");
     this.valuesStore = new CalculatingValuesStore(
       new CloudSingleLineValuesStore(db), composStore, childStore);
     this.settingsStore = new CloudSettingsStore(db);
