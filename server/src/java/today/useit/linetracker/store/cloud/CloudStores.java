@@ -1,11 +1,13 @@
 package today.useit.linetracker.store.cloud;
 
+import today.useit.linetracker.BindingModule.CurrentUser;
 import today.useit.linetracker.model.*;
 import today.useit.linetracker.store.*;
 
 import com.google.cloud.datastore.Datastore;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class CloudStores implements Stores {
   private final ItemStore<SingleLineMeta> singleStore;
@@ -15,16 +17,16 @@ public class CloudStores implements Stores {
   private final ChildStore                 childStore;
   private final SettingsStore           settingsStore;
 
-  @Inject public CloudStores(Datastore db) {
+  @Inject public CloudStores(Datastore db, @CurrentUser Provider<String> userProvider) {
     this.childStore = new CloudChildStore(db);
-    this.singleStore = new CloudItemStoreSingle(db);
+    this.singleStore = new CloudItemStoreSingle(db, userProvider);
     this.composStore = new ItemStoreWithChildren<ComposLineMeta>(
-      new CloudItemStoreCompos(db), childStore, "compos");
+      new CloudItemStoreCompos(db, userProvider), childStore, "compos");
     this.graphsStore = new ItemStoreWithChildren<GraphsLineMeta>(
-      new CloudItemStoreGraphs(db), childStore, "graphs");
+      new CloudItemStoreGraphs(db, userProvider), childStore, "graphs");
     this.valuesStore = new CalculatingValuesStore(
-      new CloudSingleLineValuesStore(db), composStore, childStore);
-    this.settingsStore = new CloudSettingsStore(db);
+      new CloudSingleLineValuesStore(db, userProvider), composStore, childStore);
+    this.settingsStore = new CloudSettingsStore(db, userProvider);
   }
 
   public ItemStore<SingleLineMeta> singleStore() {

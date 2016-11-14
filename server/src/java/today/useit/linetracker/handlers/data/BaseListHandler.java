@@ -54,6 +54,7 @@ public abstract class BaseListHandler<T> implements Handler {
   public JsonResponse handlePost(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
     String postData = IOUtils.toString(exchange.getRequestBody(), "utf-8");
+    System.out.println("Creating in " + itemStore.getClass().getName());
     T result = itemStore.createItem(itemParser.fromJson(postData));
     return new JsonResponse(itemParser.toJson(result));
   }

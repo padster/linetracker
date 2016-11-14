@@ -7,6 +7,7 @@ import com.google.cloud.datastore.Datastore;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class CloudChildStore implements ChildStore {
   private final Datastore db;
@@ -17,7 +18,7 @@ public class CloudChildStore implements ChildStore {
 
   public Map<String, List<ChildEntry>> allChildrenForTypeAndIDs(String type, List<String> ids) {
     // TODO
-    return null;
+    return new HashMap<>();
   }
 
   public List<ChildEntry> getChildren(String fullID) {

@@ -6,24 +6,29 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 
+import javax.inject.Provider;
+
 public class CloudItemStoreSingle extends CloudItemStore<SingleLineMeta> {
-  public CloudItemStoreSingle(Datastore db) {
-    super(db, Keys.SINGLE_TYPE);
+  public CloudItemStoreSingle(Datastore db, Provider<String> userProvider) {
+    super(db, Keys.SINGLE_TYPE, userProvider);
   }
 
   protected SingleLineMeta fromEntity(Entity entity) {
     SingleLineMeta line = new SingleLineMeta();
-    line.id = entity.key().toString(); // HACK
+    line.id = entity.key().name();
     line.name = entity.getString("name");
-    line.link = entity.getString("link");
+    if (entity.contains("link")) {
+      line.link = entity.getString("link");
+    }
     return line;
   }
 
   protected Entity toEntity(SingleLineMeta value) {
-    Key key = this.idToKey(value.id);
-    return Entity.builder(key)
-        .set("name", value.name)
-        .set("link", value.link)
-        .build();
+    Entity.Builder builder = entityForID(value.id);
+    builder.set("name", value.name);
+    if (value.link != null) {
+      builder.set("link", value.link);
+    }
+    return builder.build();
   }
 }

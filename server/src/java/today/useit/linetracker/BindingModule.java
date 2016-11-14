@@ -7,6 +7,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
+import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 
 import javax.inject.Provider;
@@ -53,6 +54,11 @@ public class BindingModule extends AbstractModule {
   @BindingAnnotation
   public @interface BackupFilePath {}
 
+  @Retention(RetentionPolicy.RUNTIME)
+  @BindingAnnotation
+  public @interface CurrentUser {}
+
+
   public final Map<String, Provider<? extends Handler>> bindings = new HashMap<>();
 
   @Override protected void configure() {
@@ -66,12 +72,12 @@ public class BindingModule extends AbstractModule {
   }
 
   public <T extends Handler> void bindHandler(String path, Class<T> handlerClass) {
-    bind(handlerClass);
+    bind(handlerClass).in(Singleton.class);
     bindings.put(path, this.getProvider(handlerClass));
   }
 
   public <T extends Handler> void bindDataHandler(String path, Class<T> handlerClass) {
-    bind(handlerClass);
+    bind(handlerClass).in(Singleton.class);
     String dataPath = DATA_PATH + path;
     bindings.put(dataPath, this.getProvider(handlerClass));
   }

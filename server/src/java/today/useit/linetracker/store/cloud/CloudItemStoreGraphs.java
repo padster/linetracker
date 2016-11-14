@@ -6,21 +6,23 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 
+import javax.inject.Provider;
+
 public class CloudItemStoreGraphs extends CloudItemStore<GraphsLineMeta> {
-  public CloudItemStoreGraphs(Datastore db) {
-    super(db, Keys.GRAPHS_TYPE);
+  public CloudItemStoreGraphs(Datastore db, Provider<String> userProvider) {
+    super(db, Keys.GRAPHS_TYPE, userProvider);
   }
 
   protected GraphsLineMeta fromEntity(Entity entity) {
     GraphsLineMeta line = new GraphsLineMeta();
-    line.id = entity.key().toString(); // HACK
+    line.id = entity.key().name(); // HACK
     line.name = entity.getString("name");
     return line;
   }
 
   protected Entity toEntity(GraphsLineMeta value) {
-    Key key = this.idToKey(value.id);
-    return Entity.builder(key)
+    Entity.Builder builder = entityForID(value.id);
+    return builder
         .set("name", value.name)
         .build();
   }

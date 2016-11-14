@@ -10,20 +10,23 @@ import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.Transaction;
 
+import javax.inject.Provider;
+
 public class CloudSettingsStore implements SettingsStore {
   private final Datastore db;
-  private final String userID;
+  private final Provider<String> userProvider;
   private final KeyFactory keyFactory;
 
-  public CloudSettingsStore(Datastore db) {
+  public CloudSettingsStore(Datastore db, Provider<String> userProvider) {
     this.db = db;
-    this.userID = "HACK"; // TODO - inject.
+    this.userProvider = userProvider;
     this.keyFactory = db.newKeyFactory().kind(Keys.SETTINGS_TYPE);
   }
 
   /** @return Settings for the current user. */
   public Settings getSettings() {
-    Entity asEntity = db.get(keyFactory.newKey(userID));
+    System.out.println("GETTING SETTINGS FOR " + userProvider.get());
+    Entity asEntity = db.get(keyFactory.newKey(userProvider.get()));
     return entityToSettings(asEntity);
   }
 
@@ -43,7 +46,6 @@ public class CloudSettingsStore implements SettingsStore {
 
   // Entity -> Settings translator.
   private Settings entityToSettings(Entity entity) {
-    System.out.println("HERE " + entity);
     if (entity == null) {
       // Nothing stored yet, so no home ID.
       return new Settings(null);
@@ -53,7 +55,7 @@ public class CloudSettingsStore implements SettingsStore {
 
   // Settings -> Entity translator.
   private Entity settingsToEntity(Settings settings) {
-    Key key = keyFactory.newKey(userID);
+    Key key = keyFactory.newKey(userProvider.get());
     return Entity.builder(key)
       .set("homeID", settings.homeID)
       .build();

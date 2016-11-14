@@ -2,6 +2,7 @@ package today.useit.linetracker;
 
 import today.useit.linetracker.BindingModule.Bindings;
 import today.useit.linetracker.BindingModule.ServerPort;
+import today.useit.linetracker.BindingModule.CurrentUser;
 import today.useit.linetracker.handlers.RouteHandler;
 import today.useit.linetracker.store.cloud.CloudStores;
 import today.useit.linetracker.store.memory.InMemoryStores;
@@ -40,6 +41,11 @@ public class ServerModule extends AbstractModule {
     if (cloudStore) {
       System.out.println(String.format("\nUsing storage at: %s",
         System.getenv().get("DATASTORE_EMULATOR_HOST")));
+      if ("".equals(System.getenv().get("DATASTORE_EMULATOR_HOST"))) {
+        throw new IllegalArgumentException(
+          "Must use the datastore emulator for now...\n" +
+          "run: $(gcloud beta emulators datastore env-init --data-dir=cloudstore)");
+      }
       Datastore db = DatastoreOptions.defaultInstance().service();
       bind(Datastore.class).toInstance(db);
       bind(Stores.class).to(CloudStores.class).asEagerSingleton();
@@ -47,6 +53,9 @@ public class ServerModule extends AbstractModule {
     } else {
       bind(Stores.class).to(InMemoryStores.class).asEagerSingleton();
     }
+
+    // TODO: properly
+    bind(String.class).annotatedWith(CurrentUser.class).toInstance("HACK");
   }
 
   @Provides @Singleton

@@ -15,27 +15,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import javax.inject.Provider;
 
 public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
   protected final Datastore db;
   protected final String dbKind;
+  protected final Provider<String> userProvider;
 
-  public CloudItemStore(Datastore db, String dbKind) {
+  public CloudItemStore(Datastore db, String dbKind, Provider<String> userProvider) {
     this.db = db;
     this.dbKind = dbKind;
+    this.userProvider = userProvider;
   }
 
   public List<T> listItems() {
+    System.out.println("LISTING");
     Query<Entity> query = Query.entityQueryBuilder()
       .kind(this.dbKind)
-      .filter(Keys.currentUserFilter())
-      .orderBy(OrderBy.asc("name"))
+      // .filter(Keys.currentUserFilter())
+      // .orderBy(OrderBy.asc("name"))
       .limit(Limits.LINE_LIMIT_SINGLE_FETCH)
       .build();
     QueryResults<Entity> result = db.run(query);
     final Iterable<Entity> resultIterable = () -> result;
     Stream<Entity> resultStream = StreamSupport.stream(resultIterable.spliterator(), false);
-    // Stream<Entity> resultStream = Stream.generate(result::next);
     return resultStream.map(entity -> {
       System.out.println("HERE");
       return this.fromEntity(entity);
@@ -53,8 +56,12 @@ public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
   }
 
   public T createItem(T item) {
-    // TODO
-    return null;
+    String newId = Keys.newForLine(this.db, this.dbKind);
+    System.out.println("WITH ID = " + newId);
+    item.setId(newId);
+    Entity ent = toEntity(item);
+    db.put(ent);
+    return item;
   }
 
   public boolean deleteItem(String id) {
@@ -64,6 +71,10 @@ public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
 
   protected Key idToKey(String id) {
     return Keys.forLine(db, dbKind, id);
+  }
+
+  protected Entity.Builder entityForID(String id) {
+    return ACLs.entityForUser(idToKey(id), userProvider.get());
   }
 
   protected abstract T fromEntity(Entity entity);
