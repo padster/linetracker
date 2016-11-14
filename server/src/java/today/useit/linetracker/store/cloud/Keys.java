@@ -1,17 +1,22 @@
 package today.useit.linetracker.store.cloud;
 
 import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.PathElement;
+import com.google.cloud.datastore.Query;
+import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 
 import java.util.Random;
 
 public final class Keys {
-  public static final String SINGLE_TYPE = "LS";
-  public static final String COMPOS_TYPE = "LC";
-  public static final String GRAPHS_TYPE = "LG";
+  public static final String SINGLE_TYPE   = "LS";
+  public static final String COMPOS_TYPE   = "LC";
+  public static final String GRAPHS_TYPE   = "LG";
   public static final String SETTINGS_TYPE = "ST";
+  public static final String VALUE_TYPE    = "DV";
 
   private static final Random RANDOM = new Random();
   private static final int ID_LENGTH = 12;
@@ -33,7 +38,25 @@ public final class Keys {
 
   public static Key forLine(Datastore db, String dbKind, String id) {
     // TODO - cache key factory.
-    return db.newKeyFactory().kind(dbKind).newKey(id);
+    return db.newKeyFactory()
+      .kind(dbKind)
+      .newKey(id);
+  }
+
+  public static Key forDatedValue(Datastore db, String lineId, String yyyymmdd) {
+    // Values can only be on single lines.
+    return db.newKeyFactory()
+      .addAncestors(PathElement.of(SINGLE_TYPE, lineId))
+      .kind(VALUE_TYPE)
+      .newKey(yyyymmdd);
+  }
+
+  public static Query<Entity> datedValueQuery(Datastore db, String lineId) {
+    Key lineKey = db.newKeyFactory().kind(SINGLE_TYPE).newKey(lineId);
+    return Query.entityQueryBuilder()
+      .kind(VALUE_TYPE)
+      .filter(PropertyFilter.hasAncestor(lineKey))
+      .build();
   }
 
   // HACK - move elsewhere?

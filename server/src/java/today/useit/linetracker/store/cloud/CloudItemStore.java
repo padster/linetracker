@@ -32,15 +32,14 @@ public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
     System.out.println("LISTING");
     Query<Entity> query = Query.entityQueryBuilder()
       .kind(this.dbKind)
-      // .filter(Keys.currentUserFilter())
-      // .orderBy(OrderBy.asc("name"))
+      .filter(Keys.currentUserFilter())
+      .orderBy(OrderBy.asc("name"))
       .limit(Limits.LINE_LIMIT_SINGLE_FETCH)
       .build();
     QueryResults<Entity> result = db.run(query);
     final Iterable<Entity> resultIterable = () -> result;
     Stream<Entity> resultStream = StreamSupport.stream(resultIterable.spliterator(), false);
     return resultStream.map(entity -> {
-      System.out.println("HERE");
       return this.fromEntity(entity);
     }).collect(Collectors.toList());
   }
@@ -57,16 +56,19 @@ public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
 
   public T createItem(T item) {
     String newId = Keys.newForLine(this.db, this.dbKind);
-    System.out.println("WITH ID = " + newId);
     item.setId(newId);
     Entity ent = toEntity(item);
-    db.put(ent);
+    db.add(ent);
     return item;
   }
 
   public boolean deleteItem(String id) {
-    // TODO
-    return false;
+    T item = getItem(id); // User can get
+    if (item == null) {
+      return false;
+    }
+    db.delete(Keys.forLine(db, dbKind, id));
+    return true;
   }
 
   protected Key idToKey(String id) {

@@ -5,6 +5,7 @@ import today.useit.linetracker.store.ChildStore;
 
 import com.google.cloud.datastore.Datastore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class CloudChildStore implements ChildStore {
 
   public List<ChildEntry> getChildren(String fullID) {
     // TODO
-    return null;
+    return new ArrayList<>();
   }
 
   public void addChildren(String fullID, List<ChildEntry> children) {
