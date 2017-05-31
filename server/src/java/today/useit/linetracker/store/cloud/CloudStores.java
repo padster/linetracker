@@ -1,6 +1,6 @@
 package today.useit.linetracker.store.cloud;
 
-import today.useit.linetracker.BindingModule.CurrentUser;
+import com.github.padster.guiceserver.Annotations.CurrentUser;
 import today.useit.linetracker.model.*;
 import today.useit.linetracker.store.*;
 

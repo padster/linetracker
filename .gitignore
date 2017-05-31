@@ -1,3 +1,7 @@
+# IDE
+.idea/
+server/padster-linetracker.iml
+
 # Client
 client/node_modules
 
@@ -9,6 +13,7 @@ client/.DS_Store
 client/npm-debug.log
 
 # Server
+debug.log
 server/target
 server/debug.log
 server/debug.log.lck

@@ -1,7 +1,7 @@
 package today.useit.linetracker.handlers;
 
-import today.useit.linetracker.handlers.RouteHandlerResponses.MustacheResponse;
-import today.useit.linetracker.json.JsonParser;
+import com.github.padster.guiceserver.handlers.Handler;
+import com.github.padster.guiceserver.handlers.RouteHandlerResponses.MustacheResponse;
 
 import com.sun.net.httpserver.HttpExchange;
 

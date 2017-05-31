@@ -1,8 +1,8 @@
 package today.useit.linetracker.handlers.data;
 
-import today.useit.linetracker.handlers.Handler;
-import today.useit.linetracker.handlers.RouteHandlerResponses.JsonResponse;
-import today.useit.linetracker.json.JsonParser;
+import com.github.padster.guiceserver.handlers.Handler;
+import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
+import com.github.padster.guiceserver.json.JsonParser;
 import today.useit.linetracker.model.DateFormat;
 import today.useit.linetracker.model.DatedValue;
 import today.useit.linetracker.model.ValueInsertRequest;

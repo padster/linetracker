@@ -1,7 +1,7 @@
 package today.useit.linetracker;
 
-import today.useit.linetracker.json.JsonParser;
-import today.useit.linetracker.json.JsonParserImpl;
+import com.github.padster.guiceserver.json.JsonParser;
+import com.github.padster.guiceserver.json.JsonParserImpl;
 import today.useit.linetracker.model.*;
 
 import com.google.gson.Gson;

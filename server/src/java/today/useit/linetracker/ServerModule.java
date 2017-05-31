@@ -1,9 +1,9 @@
 package today.useit.linetracker;
 
-import today.useit.linetracker.BindingModule.Bindings;
-import today.useit.linetracker.BindingModule.ServerPort;
-import today.useit.linetracker.BindingModule.CurrentUser;
-import today.useit.linetracker.handlers.RouteHandler;
+import com.github.padster.guiceserver.handlers.RouteHandler;
+import com.github.padster.guiceserver.Annotations.Bindings;
+import com.github.padster.guiceserver.Annotations.ServerPort;
+import com.github.padster.guiceserver.Annotations.CurrentUser;
 import today.useit.linetracker.store.cloud.CloudStores;
 import today.useit.linetracker.store.memory.InMemoryStores;
 import today.useit.linetracker.store.Stores;

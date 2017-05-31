@@ -1,6 +1,6 @@
 package today.useit.linetracker.handlers.data;
 
-import today.useit.linetracker.json.JsonParser;
+import com.github.padster.guiceserver.json.JsonParser;
 import today.useit.linetracker.model.SingleLineMeta;
 import today.useit.linetracker.store.Stores;
 

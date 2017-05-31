@@ -1,5 +1,6 @@
 package today.useit.linetracker;
 
+import com.github.padster.guiceserver.BaseBindingModule;
 import today.useit.linetracker.handlers.*;
 import today.useit.linetracker.handlers.data.*;
 
@@ -19,17 +20,12 @@ import java.util.Map;
 /**
  * Provides all the path -> handler bindings, and a way for other modules to configure them.
  */
-public class BindingModule extends AbstractModule {
-  final String DATA_PATH = "/_";
-
-  /** Handler Bindings for this server. */
-  void defaultBindings() {
-    bindDataHandlers();
-
-    bindHandler("/", HelloHandler.class);
+public class BindingModule extends BaseBindingModule {
+  @Override protected void bindPageHandlers() {
+    // TODO
   }
 
-  void bindDataHandlers() {
+  protected void bindDataHandlers() {
     bindDataHandler("/compos", ListComposHandler.class);
     bindDataHandler("/graphs", ListGraphsHandler.class);
     bindDataHandler("/single", ListSingleHandler.class);
@@ -40,45 +36,5 @@ public class BindingModule extends AbstractModule {
     bindDataHandler("/values/single/:id/:yyyymmdd", DatedValueHandler.class);
     bindDataHandler("/:type/:id/children", EditChildrenHandler.class);
     bindDataHandler("/settings", SettingsHandler.class);
-  }
-
-  @Retention(RetentionPolicy.RUNTIME)
-  @BindingAnnotation
-  public @interface Bindings {}
-
-  @Retention(RetentionPolicy.RUNTIME)
-  @BindingAnnotation
-  public @interface ServerPort {}
-
-  @Retention(RetentionPolicy.RUNTIME)
-  @BindingAnnotation
-  public @interface BackupFilePath {}
-
-  @Retention(RetentionPolicy.RUNTIME)
-  @BindingAnnotation
-  public @interface CurrentUser {}
-
-
-  public final Map<String, Provider<? extends Handler>> bindings = new HashMap<>();
-
-  @Override protected void configure() {
-    bind(new TypeLiteral<Map<String, Provider<? extends Handler>>>(){})
-        .annotatedWith(Bindings.class)
-        .toInstance(bindings);
-
-    defaultBindings();
-
-    bind(MustacheFactory.class).toInstance(new DefaultMustacheFactory());
-  }
-
-  public <T extends Handler> void bindHandler(String path, Class<T> handlerClass) {
-    bind(handlerClass).in(Singleton.class);
-    bindings.put(path, this.getProvider(handlerClass));
-  }
-
-  public <T extends Handler> void bindDataHandler(String path, Class<T> handlerClass) {
-    bind(handlerClass).in(Singleton.class);
-    String dataPath = DATA_PATH + path;
-    bindings.put(dataPath, this.getProvider(handlerClass));
   }
 }
