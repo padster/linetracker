@@ -15,12 +15,15 @@ class ComposItem extends Component {
   disposeSingleList: null;
   disposeComposList: null;
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
       addLineOpen: false,
       editNameOpen: false,
     };
+  }
 
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.dispose = Stores.composStore.addListener(`${this.props.id}`, () => {
       console.log("Changed!");
@@ -87,9 +90,9 @@ class ComposItem extends Component {
                   </div>
                   <div className="flex-spacer" />
                   <div className="listingActions">
-                    <a className="btn btn-mini listRemove" title="Delete" onClick={handleDelete}>
+                    <button className="btn btn-mini listRemove" title="Delete" onClick={handleDelete}>
                       <i className="material-icons">delete</i>
-                    </a>
+                    </button>
                   </div>
                 </div></li>
               );

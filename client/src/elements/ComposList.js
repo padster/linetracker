@@ -8,7 +8,7 @@ import Stores from '../data/Stores.js';
 class ComposList extends Component {
   dispose: null;
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.dispose = Stores.composStore.addListener('', () => {
       console.log("Changed!");
@@ -45,9 +45,9 @@ class ComposList extends Component {
                   <div className="listingName"><a href={url}>{line.name}</a></div>
                   <div className="flex-spacer"></div>
                   <div className="listingActions">
-                    <a className="btn btn-mini listRemove" title="Delete" onClick={deleteHandler}>
+                    <button className="btn btn-mini listRemove" title="Delete" onClick={deleteHandler}>
                       <i className="material-icons">delete</i>
-                    </a>
+                    </button>
                   </div>
                 </div></li>
               );

@@ -9,7 +9,7 @@ class GraphsList extends Component {
   dispose: null;
   disposeSettings: null;
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.dispose = Stores.graphsStore.addListener('', () => {
       console.log("Changed!");
@@ -57,15 +57,15 @@ class GraphsList extends Component {
                 <li key={line.id}><div className="trow">
                   <div className="listingName"><a href={url}>{line.name}</a></div>
                   <div className="flex-spacer"></div>
-                  <a className="listStar" title="Set Home Graph" onClick={starHandler}>
+                  <button className="listStar btn btn-mini" title="Set Home Graph" onClick={starHandler}>
                     {isHome ? <i className="material-icons">star</i> : null}
                     {isHome ? null : <i className="material-icons starNormal">star_border</i>}
                     {isHome ? null : <i className="material-icons starHover">star_half</i>}
-                  </a>
+                  </button>
                   <div className="listingActions">
-                    <a className="btn btn-mini listRemove" title="Delete" onClick={deleteHandler}>
+                    <button className="btn btn-mini listRemove" title="Delete" onClick={deleteHandler}>
                       <i className="material-icons">delete</i>
-                    </a>
+                    </button>
                   </div>
                 </div></li>
               );

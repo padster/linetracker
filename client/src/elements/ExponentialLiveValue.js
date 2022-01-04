@@ -5,7 +5,7 @@ import LiveTicker from '../data/LiveTicker.js';
 class ExponentialLiveValue extends Component {
   dispose: null;
 
-  componentWillMount() {
+  componentDidMount() {
     this.dispose = LiveTicker.addListener(this.forceUpdate.bind(this));
   }
 

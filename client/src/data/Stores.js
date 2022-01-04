@@ -1,10 +1,10 @@
 // HACK - remove before deploy, pass server location from server.
-const SERVER_DATA_PREFIX = 'http://localhost:8080/_';
-
 import ChildStore from './ChildStore.js';
 import ItemStore from './ItemStore.js';
 import SettingsStore from './SettingsStore.js';
 import ValuesStore from './ValuesStore.js';
+
+const SERVER_DATA_PREFIX = 'http://localhost:8080/_';
 
 /** Holds all the data within the app. */
 const Stores = {

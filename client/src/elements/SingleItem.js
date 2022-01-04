@@ -13,7 +13,8 @@ class SingleItem extends Component {
   disposeItem: null;
   disposeValues: null;
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
       singleValueAmount: '',
       singleValueDate: moment().format('YYYY-MM-DD'),
@@ -22,7 +23,9 @@ class SingleItem extends Component {
 
       editNameOpen: false,
     };
+  }
 
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.disposeItem = Stores.singleStore.addListener(`${this.props.id}`, () => {
       console.log("Item changed!");
@@ -60,9 +63,9 @@ class SingleItem extends Component {
       <div className="centralList">
         <div className="listTitle">
           <h2>{line.name}</h2>
-          <Button bsSize="xsmall" className="btn-mini" title="Rename" onClick={openEditName}>
+          <span className="btn btn-mini editName" title="Rename" onClick={openEditName}>
             <i className="material-icons">mode_edit</i>
-          </Button>
+          </span>
           <div className="flex-spacer" />
           <a href={viewGraphLink} className="btn getView">
             Graph <i className="material-icons graphIcon">trending_up</i>
@@ -78,9 +81,9 @@ class SingleItem extends Component {
                 <div className="listingName"> {formattedDay}: {value.v} </div>
                 <div className="flex-spacer" />
                 <div className="listingActions">
-                  <a className="btn btn-mini listRemove" title="Delete" onClick={handleDelete}>
+                  <button className="btn btn-mini listRemove" title="Delete" onClick={handleDelete}>
                     <i className="material-icons">delete</i>
-                  </a>
+                  </button>
                 </div>
               </div></li>
             );

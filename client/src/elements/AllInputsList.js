@@ -9,12 +9,15 @@ class AllInputsList extends Component {
   state: null;
   dispose: null;
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
       values: [],
       entryDate: moment().format('YYYY-MM-DD'),
     };
+  }
 
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.dispose = Stores.singleStore.addListener('', () => {
       console.log("Changed!");
@@ -63,7 +66,7 @@ class AllInputsList extends Component {
             const value = this.state.values[idx];
 
             const openLinkOrSpacer = !line.link ? <span className="buttonSpacer" /> : (
-              <a className="btn btn-mini viewlink" href={line.link} target="_blank" tabIndex="2">
+              <a className="btn btn-mini viewlink" href={line.link} target="_blank" rel="noreferrer" tabIndex="2">
                 <i className="material-icons">open_in_new</i>
               </a>
             );
@@ -71,7 +74,7 @@ class AllInputsList extends Component {
             return (
               <li key={line.id}><div className="trow">
                 <div className="listingName">
-                  <a href={link} target="_blank">{line.name}</a>
+                  <a href={link} target="_blank" rel="noreferrer">{line.name}</a>
                 </div>
                 <div className="flex-spacer" />
                 <div className="listingActions">

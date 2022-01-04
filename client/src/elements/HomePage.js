@@ -24,7 +24,7 @@ class HomePage extends Component {
   disposeValues: null;
   disposeSettings: null;
 
-  componentWillMount() {
+  componentDidMount() {
     this.disposeGraphs = Stores.graphsStore.addListener('', () => {
       console.log("Graphs updated!");
       this.forceUpdate();

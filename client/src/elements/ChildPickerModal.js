@@ -10,11 +10,14 @@ class ChildPickerModal extends Component {
   disposeSingleList: null;
   disposeComposList: null;
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
       selectedChildren: new Set(),
     };
+  }
 
+  componentDidMount() {
     this.disposeSingleList = Stores.singleStore.addListener('', () => {
       this.forceUpdate();
     });
@@ -42,7 +45,7 @@ class ChildPickerModal extends Component {
     const disableSave = this.state.selectedChildren.size === 0;
 
     return (
-      <Modal show={this.props.show} onHide={this.props.onHide}>
+      <Modal show={this.props.show} onHide={this.props.onHide} animation={false}>
         <Modal.Header>
           <h3>Possible lines to add:</h3>
         </Modal.Header>
@@ -50,7 +53,7 @@ class ChildPickerModal extends Component {
             {content}
         </Modal.Body>
         <Modal.Footer>
-          <Button className="btn-flex" bsStyle="primary" disabled={disableSave} onClick={this.handleSubmit.bind(this)}>
+          <Button className="btn-flex" variant="primary" disabled={disableSave} onClick={this.handleSubmit.bind(this)}>
             <i className="material-icons">add</i> Add
           </Button>
           <Button className="btn-flex" onClick={this.props.onHide}>

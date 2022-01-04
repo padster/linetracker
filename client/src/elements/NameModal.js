@@ -5,7 +5,8 @@ import { Button, Modal } from 'react-bootstrap';
 class NameModal extends Component {
   state: Object;
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
       nameOverride: null,
     };
@@ -31,7 +32,7 @@ class NameModal extends Component {
             <input type="text" value={inputValue} onChange={changeValue}></input>
         </Modal.Body>
         <Modal.Footer>
-          <Button className="btn-flex" bsStyle="primary" disabled={disableSave} onClick={this.handleSubmit.bind(this)}>
+          <Button className="btn-flex" variant="primary" disabled={disableSave} onClick={this.handleSubmit.bind(this)}>
             <i className="material-icons">add</i> Change
           </Button>
           <Button className="btn-flex" onClick={this.props.onHide}>

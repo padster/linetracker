@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 class GraphsForm extends Component {
   state: Object;
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
       newLineName: '',
     };

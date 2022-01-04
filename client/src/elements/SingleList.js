@@ -8,7 +8,7 @@ import Stores from '../data/Stores.js';
 class SingleList extends Component {
   dispose: null;
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.dispose = Stores.singleStore.addListener('', () => {
       console.log("Changed!");
@@ -41,7 +41,7 @@ class SingleList extends Component {
               const url = 'single/' + line.id;
               const deleteHandler = this.delete.bind(this, line);
               const linkRender = line.link && (
-                <a className="btn btn-mini viewlink" title="View" href={line.link} target="_blank">
+                <a className="btn btn-mini viewlink" title="View" href={line.link} target="_blank" rel="noreferrer">
                   <i className="material-icons">open_in_new</i>
                 </a>
               );
@@ -51,9 +51,9 @@ class SingleList extends Component {
                   <div className="flex-spacer"></div>
                   <div className="listingActions">
                     {linkRender}
-                    <a className="btn btn-mini listRemove" title="Delete" onClick={deleteHandler}>
+                    <button className="btn btn-mini listRemove" title="Delete" onClick={deleteHandler}>
                       <i className="material-icons">delete</i>
-                    </a>
+                    </button>
                   </div>
                 </div></li>
               );
