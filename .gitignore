@@ -18,3 +18,4 @@ server/target
 server/debug.log
 server/debug.log.lck
 server/cloudstore
+server/gcp-conf/*.json

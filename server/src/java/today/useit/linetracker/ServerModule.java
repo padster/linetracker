@@ -28,17 +28,22 @@ import java.util.function.BiConsumer;
 /** Configures the HttpServer within Guice. */
 public class ServerModule extends AbstractModule {
   public final int port;
-  public final boolean cloudStore;
+  public final String storeType;
 
-  public ServerModule(int port, boolean cloudStore) {
+  public ServerModule(int port, String storeType) {
     this.port = port;
-    this.cloudStore = cloudStore;
+    this.storeType = storeType;
   }
 
   @Override protected void configure() {
     bind(Integer.class).annotatedWith(ServerPort.class).toInstance(this.port);
 
-    if (cloudStore) {
+    if (this.storeType == null) {
+      System.out.println("> Storage: In memory");
+      bind(Stores.class).to(InMemoryStores.class).asEagerSingleton();
+    } else if ("datastore_local".equals(storeType)) {
+      System.out.println("> Storage: Local Datastore.");
+
       System.out.println(String.format("\nUsing storage at: %s",
         System.getenv().get("DATASTORE_EMULATOR_HOST")));
       if ("".equals(System.getenv().get("DATASTORE_EMULATOR_HOST"))) {
@@ -50,8 +55,10 @@ public class ServerModule extends AbstractModule {
       bind(Datastore.class).toInstance(db);
       bind(Stores.class).to(CloudStores.class).asEagerSingleton();
       // bind(Stores.class).toInstance(new CloudStores(db));
+    } else if ("datastore_gcp".equals(storeType)) {
+      System.out.println("> Storage: GCP Datastore. TODO: implement");
     } else {
-      bind(Stores.class).to(InMemoryStores.class).asEagerSingleton();
+      throw new IllegalArgumentException("Unknown store: " + storeType);
     }
 
     // TODO: properly

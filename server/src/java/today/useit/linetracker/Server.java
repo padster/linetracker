@@ -27,15 +27,14 @@ public class Server {
     String portFlag = maybeGetFlag(args, "port");
     int port = portFlag != null ? Integer.parseInt(portFlag) : 80;
 
-    String storeFlag = maybeGetFlag(args, "store");
-    boolean cloudStore = storeFlag != null && storeFlag.equalsIgnoreCase("cloud");
+    String storeType = maybeGetFlag(args, "store");
 
     try {
       // Run Guice, and start the server it provides.
       Injector injector = Guice.createInjector(
           new ParserModule(),
           new BindingModule(),
-          new ServerModule(port, cloudStore)
+          new ServerModule(port, storeType)
       );
 
       HttpServer server = injector.getInstance(HttpServer.class);
