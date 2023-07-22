@@ -1,4 +1,19 @@
+/****
+
+Still remaining:
+ * Thread through uid to each section
+ * Add settings loader
+ * Memory check loading everything at once
+ * Switch to write mode against in-memory DB
+ * Clean up BaseLoader (& other loader comments)
+ * run!
+
+*****/
+
 package today.useit.linetracker.db;
+
+import today.useit.linetracker.db.transforms.*;
+import today.useit.linetracker.model.*;
 
 import com.google.gson.Gson;
 import com.google.inject.Guice;
@@ -6,11 +21,11 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.sun.net.httpserver.HttpServer;
 
+import java.util.List;
+import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-// TODO - remove
-import today.useit.linetracker.db.transforms.ComposLineLoader;
 
 /**
  * Migration server entrypoint.
@@ -29,9 +44,21 @@ public class Migration {
 
 
     Gson gson = new Gson();
+    LineTypeLoader lineTypes = new LineTypeLoader(gson).preload();
+
     try {
-      ComposLineLoader t = new ComposLineLoader(gson);
-      System.out.println(t.loadAll());
+      // logger.info("Loading single lines...");
+      // List<SingleLineMeta> sData = new SingleLineLoader(gson).loadAll();
+      // logger.info(sData.size() + " single lines loaded!");
+
+      // logger.info("Loading compos lines...");
+      // List<ComposLineMeta> cData = new ComposLineLoader(gson, lineTypes).loadAll();
+      // logger.info(cData.size() + " compos lines loaded!");
+
+      // logger.info("Loading graphs lines...");
+      // List<GraphsLineMeta> gData = new GraphsLineLoader(gson, lineTypes).loadAll();
+      // logger.info(gData.size() + " graphs lines loaded!");
+
     } catch (Exception e) {
       e.printStackTrace();
       throw e;

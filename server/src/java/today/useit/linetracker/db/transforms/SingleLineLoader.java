@@ -20,8 +20,7 @@ public class SingleLineLoader extends BaseLoader<SingleLineMeta> {
     return
       "SELECT __key__, uid, name, link \n" +
       "FROM `linetracking.datastore_backup.20221601_pertype_l` \n" +
-      "WHERE op IS NULL \n" +
-      "LIMIT 10";
+      "WHERE op IS NULL";
   }
 
   public SingleLineMeta transformRow(FieldValueList row) {
@@ -34,9 +33,6 @@ public class SingleLineLoader extends BaseLoader<SingleLineMeta> {
     result.setId(id);
     result.setName(name);
     result.setLink(link);
-
-    // HACK
-    System.out.println("Parsed: " + this.fmt(result));
     return result;
   }
 }

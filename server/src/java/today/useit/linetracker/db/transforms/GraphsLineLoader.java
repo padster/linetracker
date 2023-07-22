@@ -11,16 +11,17 @@ import com.google.cloud.bigquery.FieldValueList;
 import com.google.gson.Gson;
 
 public class GraphsLineLoader extends BaseLoader<GraphsLineMeta> {
+  private final LineTypeLoader lineTypes;
 
-  public GraphsLineLoader(Gson gson) {
+  public GraphsLineLoader(Gson gson, LineTypeLoader lineTypes) {
     super(gson);
+    this.lineTypes = lineTypes;
   }
 
   public String getQuery() {
     return
       "SELECT __key__, uid, name, childMetadata \n" +
-      "FROM `linetracking.datastore_backup.20221601_pertype_g` \n" +
-      "LIMIT 10";
+      "FROM `linetracking.datastore_backup.20221601_pertype_g`";
   }
 
   public GraphsLineMeta transformRow(FieldValueList row) {
@@ -29,20 +30,14 @@ public class GraphsLineLoader extends BaseLoader<GraphsLineMeta> {
     String name = row.get("name").getStringValue();
 
     String childMeta = (String) row.get("childMetadata").getValue();
-    List<String> childIds = this.extractIds(childMeta);
-    List<String> types = childIds.stream().map(childId -> "s").collect(Collectors.toList());
-    List<ChildEntry> children = new ArrayList<ChildEntry>();
-    for (int i = 0; i < childIds.size(); i++) {
-      children.add(new ChildEntry(childIds.get(i), types.get(i)));
-    }
+    List<ChildEntry> children = this.extractIds(childMeta).stream()
+      .map(childId -> new ChildEntry(childId, this.lineTypes.getTypeForID(childId)))
+      .collect(Collectors.toList());
 
     GraphsLineMeta result = new GraphsLineMeta();
     result.setId(id);
     result.setName(name);
     result.setChildren(children);
-
-    // HACK
-    System.out.println("Parsed: " + this.fmt(result));
     return result;
   }
 }

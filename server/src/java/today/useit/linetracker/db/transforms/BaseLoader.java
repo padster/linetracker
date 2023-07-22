@@ -1,15 +1,4 @@
-/****
-
-Still remaining:
- * Pre-load ID -> single/compos mapping, hook up into child meta loaders
- * Add settings loader
- * Thread through uid to each section
- * Memory check loading everything at once
- * Switch to write mode against in-memory DB
- * run!
-
-*****/
-
+/** TODO: Clean */
 
 package today.useit.linetracker.db.transforms;
 
@@ -76,9 +65,12 @@ public abstract class BaseLoader<T> {
   // Utils
 
   protected List<String> extractIds(String json) {
-    Gson gson = new Gson();
+    if (json == null) {
+      return new ArrayList<String>();
+    }
+
     Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
-    List<Map<String, String>> childMeta = gson.fromJson(json, type);
+    List<Map<String, String>> childMeta = this.gson.fromJson(json, type);
     return childMeta.stream().map(c -> c.get("id")).collect(Collectors.toList());
   }
 
