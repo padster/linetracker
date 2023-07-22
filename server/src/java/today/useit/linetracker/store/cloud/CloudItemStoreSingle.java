@@ -15,7 +15,7 @@ public class CloudItemStoreSingle extends CloudItemStore<SingleLineMeta> {
 
   protected SingleLineMeta fromEntity(Entity entity) {
     SingleLineMeta line = new SingleLineMeta();
-    line.id = entity.key().name();
+    line.id = entity.getKey().getName();
     line.name = entity.getString("name");
     if (entity.contains("link")) {
       line.link = entity.getString("link");

@@ -34,7 +34,7 @@ public class CloudSingleLineValuesStore implements SingleLineValuesStore {
 
     final TreeSet<DatedValue> valuesSet = new TreeSet<>();
     resultStream.forEach(entity -> {
-      valuesSet.add(new DatedValue(entity.key().name(), entity.getDouble("v")));
+      valuesSet.add(new DatedValue(entity.getKey().getName(), entity.getDouble("v")));
     });
     return valuesSet;
   }

@@ -16,6 +16,14 @@ public class GraphsLineMeta implements HasId, HasChildren {
     this.id = id;
   }
 
+  public String name() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public List<ChildEntry> children() {
     return this.childMetadata;
   }

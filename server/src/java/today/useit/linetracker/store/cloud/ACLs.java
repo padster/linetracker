@@ -15,7 +15,7 @@ public class ACLs {
   }
 
   public static Entity.Builder entityForUser(Key key, String userID) {
-    return Entity.builder(key).set(USER_PROP, userID);
+    return Entity.newBuilder(key).set(USER_PROP, userID);
   }
 
   public static void assertUserCanView(Entity entity) throws ItemNotFoundException {

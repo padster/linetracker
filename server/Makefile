@@ -20,6 +20,6 @@ run_datastore_gcp: build
 	GOOGLE_APPLICATION_CREDENTIALS="./gcp-conf/linetracking-a359c122bb11.json" java -jar target/padster-linetracker-1.0-jar-with-dependencies.jar --port 8080 --store datastore_gcp
 
 migration: build
-	java -jar target/migration.jar
+	GOOGLE_APPLICATION_CREDENTIALS="./gcp-conf/linetracking-a359c122bb11.json" java -jar target/migration.jar
 
 # TODO: make deploy

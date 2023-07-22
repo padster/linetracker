@@ -30,11 +30,11 @@ public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
 
   public List<T> listItems() {
     System.out.println("LISTING");
-    Query<Entity> query = Query.entityQueryBuilder()
-      .kind(this.dbKind)
-      .filter(Keys.currentUserFilter())
-      .orderBy(OrderBy.asc("name"))
-      .limit(Limits.LINE_LIMIT_SINGLE_FETCH)
+    Query<Entity> query = Query.newEntityQueryBuilder()
+      .setKind(this.dbKind)
+      .setFilter(Keys.currentUserFilter())
+      .setOrderBy(OrderBy.asc("name"))
+      .setLimit(Limits.LINE_LIMIT_SINGLE_FETCH)
       .build();
     QueryResults<Entity> result = db.run(query);
     final Iterable<Entity> resultIterable = () -> result;

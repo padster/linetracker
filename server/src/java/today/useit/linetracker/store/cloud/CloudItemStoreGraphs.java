@@ -15,7 +15,7 @@ public class CloudItemStoreGraphs extends CloudItemStore<GraphsLineMeta> {
 
   protected GraphsLineMeta fromEntity(Entity entity) {
     GraphsLineMeta line = new GraphsLineMeta();
-    line.id = entity.key().name(); // HACK
+    line.id = entity.getKey().getName(); // HACK
     line.name = entity.getString("name");
     return line;
   }

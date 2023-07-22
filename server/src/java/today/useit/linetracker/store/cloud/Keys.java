@@ -39,7 +39,7 @@ public final class Keys {
   public static Key forLine(Datastore db, String dbKind, String id) {
     // TODO - cache key factory.
     return db.newKeyFactory()
-      .kind(dbKind)
+      .setKind(dbKind)
       .newKey(id);
   }
 
@@ -47,15 +47,15 @@ public final class Keys {
     // Values can only be on single lines.
     return db.newKeyFactory()
       .addAncestors(PathElement.of(SINGLE_TYPE, lineId))
-      .kind(VALUE_TYPE)
+      .setKind(VALUE_TYPE)
       .newKey(yyyymmdd);
   }
 
   public static Query<Entity> datedValueQuery(Datastore db, String lineId) {
-    Key lineKey = db.newKeyFactory().kind(SINGLE_TYPE).newKey(lineId);
-    return Query.entityQueryBuilder()
-      .kind(VALUE_TYPE)
-      .filter(PropertyFilter.hasAncestor(lineKey))
+    Key lineKey = db.newKeyFactory().setKind(SINGLE_TYPE).newKey(lineId);
+    return Query.newEntityQueryBuilder()
+      .setKind(VALUE_TYPE)
+      .setFilter(PropertyFilter.hasAncestor(lineKey))
       .build();
   }
 

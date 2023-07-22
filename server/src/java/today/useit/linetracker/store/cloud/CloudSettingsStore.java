@@ -20,7 +20,7 @@ public class CloudSettingsStore implements SettingsStore {
   public CloudSettingsStore(Datastore db, Provider<String> userProvider) {
     this.db = db;
     this.userProvider = userProvider;
-    this.keyFactory = db.newKeyFactory().kind(Keys.SETTINGS_TYPE);
+    this.keyFactory = db.newKeyFactory().setKind(Keys.SETTINGS_TYPE);
   }
 
   /** @return Settings for the current user. */
@@ -38,7 +38,7 @@ public class CloudSettingsStore implements SettingsStore {
       tx.put(asEntity);
       tx.commit();
     } finally {
-      if (tx.active()) {
+      if (tx.isActive()) {
         tx.rollback();
       }
     }
@@ -56,7 +56,7 @@ public class CloudSettingsStore implements SettingsStore {
   // Settings -> Entity translator.
   private Entity settingsToEntity(Settings settings) {
     Key key = keyFactory.newKey(userProvider.get());
-    return Entity.builder(key)
+    return Entity.newBuilder(key)
       .set("homeID", settings.homeID)
       .build();
   }

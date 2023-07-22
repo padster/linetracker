@@ -17,6 +17,22 @@ public class ComposLineMeta implements HasId, HasChildren {
     this.id = id;
   }
 
+  public String name() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String op() {
+    return this.op;
+  }
+
+  public void setOp(String op) {
+    this.op = op;
+  }
+
   public List<ChildEntry> children() {
     return this.childMetadata;
   }

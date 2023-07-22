@@ -51,7 +51,7 @@ public class ServerModule extends AbstractModule {
           "Must use the datastore emulator for now...\n" +
           "run: $(gcloud beta emulators datastore env-init --data-dir=cloudstore)");
       }
-      Datastore db = DatastoreOptions.defaultInstance().service();
+      Datastore db = DatastoreOptions.getDefaultInstance().getService();
       bind(Datastore.class).toInstance(db);
       bind(Stores.class).to(CloudStores.class).asEagerSingleton();
       // bind(Stores.class).toInstance(new CloudStores(db));

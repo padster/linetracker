@@ -15,7 +15,7 @@ public class CloudItemStoreCompos extends CloudItemStore<ComposLineMeta> {
 
   protected ComposLineMeta fromEntity(Entity entity) {
     ComposLineMeta line = new ComposLineMeta();
-    line.id = entity.key().name(); // HACK
+    line.id = entity.getKey().getName(); // HACK
     line.name = entity.getString("name");
     line.op = entity.getString("op");
     return line;

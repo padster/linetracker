@@ -2,11 +2,14 @@ package today.useit.linetracker.db;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Key;mvn clean compile list all files
+import com.google.inject.Key;
 import com.sun.net.httpserver.HttpServer;
 
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+
+// TODO - remove
+import today.useit.linetracker.db.transforms.ToSingleLine;
 
 /**
  * Migration server entrypoint.
@@ -23,7 +26,13 @@ public class Migration {
       return;
     }
 
-    System.out.println("TODO: Write migration code...");
+    try {
+      ToSingleLine t = new ToSingleLine();
+      System.out.println(t.loadValues());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw e;
+    }
   }
 
   // If a --flagName is given, return the next string, otherwise null.
