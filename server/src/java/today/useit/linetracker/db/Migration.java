@@ -1,5 +1,6 @@
 package today.useit.linetracker.db;
 
+import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -9,7 +10,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 // TODO - remove
-import today.useit.linetracker.db.transforms.ToSingleLine;
+import today.useit.linetracker.db.transforms.ComposLineLoader;
 
 /**
  * Migration server entrypoint.
@@ -26,9 +27,11 @@ public class Migration {
       return;
     }
 
+
+    Gson gson = new Gson();
     try {
-      ToSingleLine t = new ToSingleLine();
-      System.out.println(t.loadValues());
+      ComposLineLoader t = new ComposLineLoader(gson);
+      System.out.println(t.loadAll());
     } catch (Exception e) {
       e.printStackTrace();
       throw e;

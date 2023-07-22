@@ -1,0 +1,94 @@
+/****
+
+Still remaining:
+ * Pre-load ID -> single/compos mapping, hook up into child meta loaders
+ * Add settings loader
+ * Thread through uid to each section
+ * Memory check loading everything at once
+ * Switch to write mode against in-memory DB
+ * run!
+
+*****/
+
+
+package today.useit.linetracker.db.transforms;
+
+import today.useit.linetracker.model.*;
+
+import com.google.cloud.bigquery.*;
+
+import com.github.padster.guiceserver.json.JsonParserImpl;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import com.google.gson.Gson;
+import com.google.inject.util.Providers;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+
+public abstract class BaseLoader<T> {
+  protected Gson gson;
+
+  public BaseLoader(Gson gson) {
+    this.gson = gson;
+  }
+
+  protected abstract T transformRow(FieldValueList row);
+
+  protected abstract String getQuery();
+
+  public List<T> loadAll() {
+      try {
+        BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
+        QueryJobConfiguration queryConfig = QueryJobConfiguration
+          .newBuilder(this.getQuery())
+          .setUseLegacySql(false)
+          .build();
+
+        // Create a job ID so that we can safely retry.
+        JobId jobId = JobId.of(UUID.randomUUID().toString());
+        Job queryJob = bigquery.create(
+          JobInfo.newBuilder(queryConfig).setJobId(jobId).build()
+        ).waitFor();
+
+        // Check for errors
+        if (queryJob == null) {
+          throw new RuntimeException("Job no longer exists");
+        } else if (queryJob.getStatus().getError() != null) {
+          throw new RuntimeException(queryJob.getStatus().getError().toString());
+        }
+
+
+        Iterable<FieldValueList> rowStream = queryJob.getQueryResults().iterateAll();
+        return StreamSupport
+          .stream(rowStream.spliterator(), false)
+          .map(r -> this.transformRow(r))
+          .collect(Collectors.toList());
+      } catch (Exception e) {
+        e.printStackTrace();
+        return new ArrayList<T>();
+      }
+  }
+
+  // Utils
+
+  protected List<String> extractIds(String json) {
+    Gson gson = new Gson();
+    Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
+    List<Map<String, String>> childMeta = gson.fromJson(json, type);
+    return childMeta.stream().map(c -> c.get("id")).collect(Collectors.toList());
+  }
+
+  protected String getId(FieldValueList row) {
+    return row.get("__key__").getRecordValue().get("name").getStringValue();
+  }
+
+  protected String fmt(T result) {
+    JsonParserImpl parser = new JsonParserImpl<T>(
+      Providers.of(this.gson), new TypeToken<T>(){}.getType());
+    return parser.toJson(result);
+  }
+}
