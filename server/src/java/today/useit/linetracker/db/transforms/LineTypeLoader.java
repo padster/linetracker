@@ -17,14 +17,15 @@ public class LineTypeLoader extends BaseLoader<Pair<String, String>> {
 
   private Map<String, String> cache = null;
 
-  public LineTypeLoader(Gson gson) {
-    super(gson);
+  public LineTypeLoader(Gson gson, String uid) {
+    super(gson, uid);
   }
 
   public String getQuery() {
     return
       "SELECT __key__.name id, IF(op is NULL, 's', 'c') type \n" +
-      "FROM `linetracking.datastore_backup.20221601_pertype_l` ";
+      "FROM `linetracking.datastore_backup.20221601_pertype_l` \n" +
+      "WHERE uid = \"" + this.uid + "\"";
   }
 
   public Pair<String, String> transformRow(FieldValueList row) {

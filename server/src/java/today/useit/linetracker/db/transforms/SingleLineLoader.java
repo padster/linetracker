@@ -12,15 +12,15 @@ import com.google.gson.Gson;
 
 public class SingleLineLoader extends BaseLoader<SingleLineMeta> {
 
-  public SingleLineLoader(Gson gson) {
-    super(gson);
+  public SingleLineLoader(Gson gson, String uid) {
+    super(gson, uid);
   }
 
   public String getQuery() {
     return
       "SELECT __key__, uid, name, link \n" +
       "FROM `linetracking.datastore_backup.20221601_pertype_l` \n" +
-      "WHERE op IS NULL";
+      "WHERE op IS NULL AND uid = \"" + this.uid + "\"";
   }
 
   public SingleLineMeta transformRow(FieldValueList row) {

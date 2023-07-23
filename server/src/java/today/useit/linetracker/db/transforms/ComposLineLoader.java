@@ -13,8 +13,8 @@ import com.google.gson.Gson;
 public class ComposLineLoader extends BaseLoader<ComposLineMeta> {
   private final LineTypeLoader lineTypes;
 
-  public ComposLineLoader(Gson gson, LineTypeLoader lineTypes) {
-    super(gson);
+  public ComposLineLoader(Gson gson, String uid, LineTypeLoader lineTypes) {
+    super(gson, uid);
     this.lineTypes = lineTypes;
   }
 
@@ -22,7 +22,7 @@ public class ComposLineLoader extends BaseLoader<ComposLineMeta> {
     return
       "SELECT __key__, uid, name, link, op, childMetadata \n" +
       "FROM `linetracking.datastore_backup.20221601_pertype_l` \n" +
-      "WHERE op IS NOT NULL";
+      "WHERE op IS NOT NULL AND uid = \"" + this.uid + "\"";
   }
 
   public ComposLineMeta transformRow(FieldValueList row) {

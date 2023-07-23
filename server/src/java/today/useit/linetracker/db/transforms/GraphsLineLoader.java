@@ -13,15 +13,16 @@ import com.google.gson.Gson;
 public class GraphsLineLoader extends BaseLoader<GraphsLineMeta> {
   private final LineTypeLoader lineTypes;
 
-  public GraphsLineLoader(Gson gson, LineTypeLoader lineTypes) {
-    super(gson);
+  public GraphsLineLoader(Gson gson, String uid, LineTypeLoader lineTypes) {
+    super(gson, uid);
     this.lineTypes = lineTypes;
   }
 
   public String getQuery() {
     return
       "SELECT __key__, uid, name, childMetadata \n" +
-      "FROM `linetracking.datastore_backup.20221601_pertype_g`";
+      "FROM `linetracking.datastore_backup.20221601_pertype_g` \n" +
+      "WHERE uid = \"" + this.uid + "\"";
   }
 
   public GraphsLineMeta transformRow(FieldValueList row) {

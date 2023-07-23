@@ -15,8 +15,8 @@ import com.google.gson.Gson;
 
 public class DatedValueLoader extends BaseLoader<Pair<String, DatedValue>> {
 
-  public DatedValueLoader(Gson gson) {
-    super(gson);
+  public DatedValueLoader(Gson gson, String uid) {
+    super(gson, uid);
   }
 
   public String getQuery() {

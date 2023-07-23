@@ -19,10 +19,12 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 public abstract class BaseLoader<T> {
-  protected Gson gson;
+  protected final Gson gson;
+  protected final String uid; // Active user
 
-  public BaseLoader(Gson gson) {
+  public BaseLoader(Gson gson, String uid) {
     this.gson = gson;
+    this.uid = uid;
   }
 
   protected abstract T transformRow(FieldValueList row);

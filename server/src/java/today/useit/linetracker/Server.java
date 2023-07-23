@@ -8,6 +8,10 @@ import com.sun.net.httpserver.HttpServer;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
+// HACK - in-memory migrate first
+import today.useit.linetracker.db.Migration;
+import today.useit.linetracker.store.Stores;
+
 /**
  * The actual server entrypoint - parses flags, and runs an HttpServer obtained from Guice.
  */
@@ -36,6 +40,13 @@ public class Server {
           new BindingModule(),
           new ServerModule(port, storeType)
       );
+
+      // HACK - migrate in memory first
+      logger.info("Running test migration first...");
+      Migration m = new Migration();
+      m.loadData("113641087749801482038", injector.getInstance(Stores.class));
+      logger.info("Migration complete!");
+
 
       HttpServer server = injector.getInstance(HttpServer.class);
       System.out.println("\n*** Running server on :" + port + "...\n");
