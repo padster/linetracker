@@ -1,8 +1,10 @@
 /****
 
 Still remaining:
- * Write values and settings into store.
+ * Write settings into store.
+ * Fix performance of composite line calculator.
  * Clean up BaseLoader (& other loader comments) & Migration class.
+ * UI: Fix sorting of lines in list.
  * run!
 
 *****/
@@ -27,6 +29,7 @@ import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javafx.util.Pair;
 
 
 /**
@@ -112,6 +115,28 @@ public class Migration {
     }
   }
 
+  public static void writeValues(
+    List<Pair<String, DatedValue>> values,
+    ValuesStore store,
+    Map<String, String> idRemap
+  ) {
+    Map<String, List<DatedValue>> valuesByLine = new HashMap<>();
+    for (Pair<String, DatedValue> value : values) {
+      String newId = idRemap.get(value.getKey());
+      if (newId != null) {
+        if (!valuesByLine.containsKey(newId)) {
+          valuesByLine.put(newId, new ArrayList<>());
+        }
+        valuesByLine.get(newId).add(value.getValue());
+      }
+    }
+
+    valuesByLine.forEach( (k, v) -> {
+      logger.info("Writing " + v.size() + " values to " + k);
+      store.addValuesToSingleLine(k, v);
+    });
+  }
+
 
   public static void loadData(String uidToMigrate, Stores stores) {
     Gson gson = new Gson();
@@ -138,8 +163,6 @@ public class Migration {
       // }
       // Settings userSetting = setData.get(0);
 
-      // TODO - load individual values for the sData lines
-
       Map<String, String> idRemap = new HashMap<>();
       if (stores != null) {
         writeSingle(sData, stores.singleStore(), idRemap);
@@ -147,6 +170,11 @@ public class Migration {
         writeCompos(cData, stores.composStore(), idRemap);
         writeGraphs(gData, stores.graphsStore(), idRemap);
       }
+
+      logger.info("Loading values...");
+      List<Pair<String, DatedValue>> values = new DatedValueLoader(gson, uidToMigrate).loadAll();
+      logger.info(values.size() + " values lines loaded!");
+      writeValues(values, stores.valuesStore(), idRemap);
 
     } catch (Exception e) {
       e.printStackTrace();
