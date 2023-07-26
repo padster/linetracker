@@ -23,7 +23,7 @@ public class LineTypeLoader extends BaseLoader<Pair<String, String>> {
 
   public String getQuery() {
     return
-      "SELECT __key__.name id, IF(op is NULL, 's', 'c') type \n" +
+      "SELECT __key__.name id, IF(op is NULL, 'single', 'compos') type \n" +
       "FROM `linetracking.datastore_backup.20221601_pertype_l` \n" +
       "WHERE uid = \"" + this.uid + "\"";
   }

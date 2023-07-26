@@ -37,14 +37,17 @@ public class ItemStoreWithChildren<T extends HasChildren & HasId> implements Ite
     if (item == null) {
       return null;
     }
-    String itemFullID = type + "/" + item.id();
+    String itemFullID = this.type + "/" + item.id();
     List<ChildEntry> children = this.childStore.getChildren(itemFullID);
     item.setChildren(children);
     return item;
   }
 
   public T createItem(T item) {
-    return this.base.createItem(item);
+    T newItem = this.base.createItem(item);
+    String itemFullID = this.type + "/" + newItem.id();
+    this.childStore.addChildren(itemFullID, item.children());
+    return newItem;
   }
 
   public boolean deleteItem(String id) {

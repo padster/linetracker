@@ -34,7 +34,7 @@ public class ComposLineLoader extends BaseLoader<ComposLineMeta> {
 
     String childMeta = (String) row.get("childMetadata").getValue();
     List<ChildEntry> children = this.extractIds(childMeta).stream()
-      .map(childId -> new ChildEntry(childId, this.lineTypes.getTypeForID(childId)))
+      .map(childId -> new ChildEntry(this.lineTypes.getTypeForID(childId), childId))
       .collect(Collectors.toList());
 
     ComposLineMeta result = new ComposLineMeta();

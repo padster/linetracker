@@ -1,8 +1,8 @@
 /****
 
 Still remaining:
- * Write all remaining items into memory store.
- * Clean up BaseLoader (& other loader comments)
+ * Write values and settings into store.
+ * Clean up BaseLoader (& other loader comments) & Migration class.
  * run!
 
 *****/
@@ -19,11 +19,14 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.sun.net.httpserver.HttpServer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 /**
@@ -31,6 +34,45 @@ import java.util.logging.Logger;
  */
 public class Migration {
   private static final Logger logger = Logger.getLogger("DEBUG");
+
+  // TODO - optimize? Can be faster.
+  public static <T extends HasChildren & HasId> List<T> topsort(List<T> initial) {
+    if (initial.isEmpty()) {
+      return initial;
+    }
+
+    Set<String> toSortIDs = initial.stream().map(l -> l.id()).collect(Collectors.toSet());
+
+    List<T> processed = new ArrayList<>();
+    List<T> remaining = new ArrayList<>();
+
+    for (T line : initial) {
+      Set<String> childIds = line.children().stream().map(c -> c.id).collect(Collectors.toSet());
+      boolean hasChildToSort = line.children().stream()
+        .anyMatch(child -> toSortIDs.contains(child.id));
+      if (hasChildToSort) {
+        remaining.add(line);
+      } else {
+        processed.add(line);
+      }
+    }
+
+    if (initial.size() == remaining.size()) {
+      logger.warning("Uhoh - can't process " + initial.get(0).id());
+      throw new IllegalStateException();
+    }
+
+    processed.addAll(topsort(remaining));
+    return processed;
+  }
+
+  public static void remapIDs(HasChildren meta, Map<String, String> idRemap) {
+    meta.setChildren(
+      meta.children().stream()
+        .map(child -> new ChildEntry(child.type, idRemap.get(child.id)))
+        .collect(Collectors.toList())
+    );
+  }
 
   public static void writeSingle(
     List<SingleLineMeta> singleLines,
@@ -41,9 +83,35 @@ public class Migration {
       String oldId = line.id();
       String newId = store.createItem(line).id();
       idRemap.put(oldId, newId);
-      System.out.println(oldId + " -> " + newId);
     }
   }
+
+  public static void writeCompos(
+    List<ComposLineMeta> composLines,
+    ItemStore<ComposLineMeta> store,
+    Map<String, String> idRemap
+  ) {
+    for (ComposLineMeta line : composLines) {
+      String oldId = line.id();
+      Migration.remapIDs(line, idRemap);
+      String newId = store.createItem(line).id();
+      idRemap.put(oldId, newId);
+    }
+  }
+
+  public static void writeGraphs(
+    List<GraphsLineMeta> composLines,
+    ItemStore<GraphsLineMeta> store,
+    Map<String, String> idRemap
+  ) {
+    for (GraphsLineMeta line : composLines) {
+      String oldId = line.id();
+      Migration.remapIDs(line, idRemap);
+      String newId = store.createItem(line).id();
+      idRemap.put(oldId, newId);
+    }
+  }
+
 
   public static void loadData(String uidToMigrate, Stores stores) {
     Gson gson = new Gson();
@@ -54,13 +122,13 @@ public class Migration {
       List<SingleLineMeta> sData = new SingleLineLoader(gson, uidToMigrate).loadAll();
       logger.info(sData.size() + " single lines loaded!");
 
-      // logger.info("Loading compos lines...");
-      // List<ComposLineMeta> cData = new ComposLineLoader(gson, uidToMigrate, lineTypes).loadAll();
-      // logger.info(cData.size() + " compos lines loaded!");
+      logger.info("Loading compos lines...");
+      List<ComposLineMeta> cData = new ComposLineLoader(gson, uidToMigrate, lineTypes).loadAll();
+      logger.info(cData.size() + " compos lines loaded!");
 
-      // logger.info("Loading graphs lines...");
-      // List<GraphsLineMeta> gData = new GraphsLineLoader(gson, uidToMigrate, lineTypes).loadAll();
-      // logger.info(gData.size() + " graphs lines loaded!");
+      logger.info("Loading graphs lines...");
+      List<GraphsLineMeta> gData = new GraphsLineLoader(gson, uidToMigrate, lineTypes).loadAll();
+      logger.info(gData.size() + " graphs lines loaded!");
 
       // logger.info("Loading settings...");
       // List<Settings> setData = new SettingsLoader(gson, uidToMigrate).loadAll();
@@ -75,6 +143,9 @@ public class Migration {
       Map<String, String> idRemap = new HashMap<>();
       if (stores != null) {
         writeSingle(sData, stores.singleStore(), idRemap);
+        cData = Migration.topsort(cData);
+        writeCompos(cData, stores.composStore(), idRemap);
+        writeGraphs(gData, stores.graphsStore(), idRemap);
       }
 
     } catch (Exception e) {
