@@ -26,6 +26,7 @@ public class InMemoryStores implements Stores {
       new InMemorySingleLineValuesStore(), composStore, childStore);
     this.settingsStore = new InMemorySettingsStore();
 
+    // Seed with some fake test data:
     SingleLineMeta sline = new SingleLineMeta();
     sline.name = "single store";
     sline.link = "http://www.example.com/working";
@@ -59,7 +60,6 @@ public class InMemoryStores implements Stores {
     this.childStore.addChildren("graphs/" + gline2.id, Arrays.asList(
       new ChildEntry("single", sline.id)
     ));
-
   }
 
   public ItemStore<SingleLineMeta> singleStore() {

@@ -41,11 +41,11 @@ public enum CompositeOperation {
   }
 
   public static CompositeOperation fromText(String text) {
-    switch(text) {
-      case "plus": return CompositeOperation.PLUS;
-      case "times": return CompositeOperation.TIMES;
-      case "negate": return CompositeOperation.NEGATE;
-      case "invmult": return CompositeOperation.INVMULT;
+    switch(text.toUpperCase()) {
+      case "PLUS": return CompositeOperation.PLUS;
+      case "TIMES": return CompositeOperation.TIMES;
+      case "NEGATE": return CompositeOperation.NEGATE;
+      case "INVMULT": return CompositeOperation.INVMULT;
     }
     throw new IllegalArgumentException("Invalid operation: \"" + text + "\"");
   }

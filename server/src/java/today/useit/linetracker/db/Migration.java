@@ -2,8 +2,7 @@
 
 Still remaining:
  * Write settings into store.
- * RBC everyday doesn't load
- * Fix performance of composite line calculator.
+ * UI: Graph doesn't show values on click.
  * Clean up BaseLoader (& other loader comments) & Migration class.
  * run!
 

@@ -75,7 +75,6 @@ public class CalculatingValuesStore implements ValuesStore {
       })
       .collect(Collectors.toList());
 
-
     SortedSet<String> dates = new TreeSet<>();
     for (SortedSet<DatedValue> child : childData) {
       for (DatedValue value : child) {
