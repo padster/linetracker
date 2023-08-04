@@ -1,8 +1,8 @@
 /****
 
 Still remaining:
- * Write settings into store.
  * UI: Graph doesn't show values on click.
+ * Cash v Market and Future Ratio Target not showing up
  * Clean up BaseLoader (& other loader comments) & Migration class.
  * run!
 
@@ -76,39 +76,14 @@ public class Migration {
     );
   }
 
-  public static void writeSingle(
-    List<SingleLineMeta> singleLines,
-    ItemStore<SingleLineMeta> store,
-    Map<String, String> idRemap
+  public static <T extends HasId> void writeLines(
+    List<T> lines, ItemStore<T> store, Map<String, String> idRemap
   ) {
-    for (SingleLineMeta line : singleLines) {
+    for (T line : lines) {
       String oldId = line.id();
-      String newId = store.createItem(line).id();
-      idRemap.put(oldId, newId);
-    }
-  }
-
-  public static void writeCompos(
-    List<ComposLineMeta> composLines,
-    ItemStore<ComposLineMeta> store,
-    Map<String, String> idRemap
-  ) {
-    for (ComposLineMeta line : composLines) {
-      String oldId = line.id();
-      Migration.remapIDs(line, idRemap);
-      String newId = store.createItem(line).id();
-      idRemap.put(oldId, newId);
-    }
-  }
-
-  public static void writeGraphs(
-    List<GraphsLineMeta> composLines,
-    ItemStore<GraphsLineMeta> store,
-    Map<String, String> idRemap
-  ) {
-    for (GraphsLineMeta line : composLines) {
-      String oldId = line.id();
-      Migration.remapIDs(line, idRemap);
+      if (line instanceof HasChildren) {
+        Migration.remapIDs((HasChildren) line, idRemap);
+      }
       String newId = store.createItem(line).id();
       idRemap.put(oldId, newId);
     }
@@ -154,26 +129,31 @@ public class Migration {
       List<GraphsLineMeta> gData = new GraphsLineLoader(gson, uidToMigrate, lineTypes).loadAll();
       logger.info(gData.size() + " graphs lines loaded!");
 
-      // logger.info("Loading settings...");
-      // List<Settings> setData = new SettingsLoader(gson, uidToMigrate).loadAll();
-      // if (setData.size() != 1) {
-      //   logger.severe("Wrong settings info: Expected 1 entry, received " + setData.size());
-      //   throw new IllegalStateException();
-      // }
-      // Settings userSetting = setData.get(0);
-
       Map<String, String> idRemap = new HashMap<>();
       if (stores != null) {
-        writeSingle(sData, stores.singleStore(), idRemap);
+        writeLines(sData, stores.singleStore(), idRemap);
         cData = Migration.topsort(cData);
-        writeCompos(cData, stores.composStore(), idRemap);
-        writeGraphs(gData, stores.graphsStore(), idRemap);
+        writeLines(cData, stores.composStore(), idRemap);
+        writeLines(gData, stores.graphsStore(), idRemap);
       }
 
       logger.info("Loading values...");
       List<Pair<String, DatedValue>> values = new DatedValueLoader(gson, uidToMigrate).loadAll();
       logger.info(values.size() + " values lines loaded!");
       writeValues(values, stores.valuesStore(), idRemap);
+
+      logger.info("Loading settings...");
+      List<Settings> setData = new SettingsLoader(gson, uidToMigrate).loadAll();
+      if (setData.size() != 1) {
+        logger.severe("Wrong settings info: Expected 1 entry, received " + setData.size());
+        throw new IllegalStateException();
+      }
+      Settings userSetting = setData.get(0);
+      if (userSetting.homeID != null) {
+        userSetting = new Settings(idRemap.get(userSetting.homeID));
+      }
+      stores.settingsStore().updateSettings(userSetting);
+
 
     } catch (Exception e) {
       e.printStackTrace();
