@@ -2,9 +2,9 @@
 
 Still remaining:
  * Write settings into store.
+ * RBC everyday doesn't load
  * Fix performance of composite line calculator.
  * Clean up BaseLoader (& other loader comments) & Migration class.
- * UI: Fix sorting of lines in list.
  * run!
 
 *****/

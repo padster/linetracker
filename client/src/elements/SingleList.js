@@ -22,12 +22,18 @@ class SingleList extends Component {
 
   render() {
     console.log("Rendering list of single");
-    const lines = Stores.singleStore.list();
-    console.log("Loaded in view: %O", lines);
+    const loadedLines = Stores.singleStore.list();
 
-    if (lines === undefined) {
+    if (loadedLines === undefined) {
       return <LoadingIndicator />;
     }
+
+    const lines = loadedLines.sort((a, b) => {
+      if (a.link && !b.link) { return -1; }
+      if (b.link && !a.link) { return 1; }
+      return a.name.localeCompare(b.name);
+    });
+    console.log("Loaded in view: %O", lines);
 
     const noLineMsg = lines.length > 0 ? null : "No basic lines! Create one below...";
 

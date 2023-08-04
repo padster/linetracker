@@ -28,12 +28,16 @@ class GraphsList extends Component {
 
   render() {
     console.log("Rendering list of graphs");
-    const lines = Stores.graphsStore.list();
-    console.log("Loaded in view: %O", lines);
+    const loadedLines = Stores.graphsStore.list();
 
-    if (lines === undefined) {
+    if (loadedLines === undefined) {
       return <LoadingIndicator />;
     }
+
+    const lines = loadedLines.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    console.log("Loaded in view: %O", lines);
 
     const settings = Stores.settingsStore.get();
     if (settings === undefined) {

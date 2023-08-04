@@ -22,12 +22,16 @@ class ComposList extends Component {
 
   render() {
     console.log("Rendering list of compos");
-    const lines = Stores.composStore.list();
-    console.log("Loaded in view: %O", lines);
+    const loadedLines = Stores.composStore.list();
 
-    if (lines === undefined) {
+    if (loadedLines === undefined) {
       return <LoadingIndicator />;
     }
+
+    const lines = loadedLines.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    console.log("Loaded in view: %O", lines);
 
     const noLineMsg = lines.length > 0 ? null : "No calculated lines! Create one below...";
 

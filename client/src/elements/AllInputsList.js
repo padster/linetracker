@@ -32,12 +32,18 @@ class AllInputsList extends Component {
 
   render() {
     console.log("Rendering list of single");
-    const lines = Stores.singleStore.list();
-    console.log("Loaded in view: %O", lines);
+    const loadedLines = Stores.singleStore.list();
 
-    if (lines === undefined) {
+    if (loadedLines === undefined) {
       return <LoadingIndicator />;
     }
+
+    const lines = loadedLines.sort((a, b) => {
+      if (a.link && !b.link) { return -1; }
+      if (b.link && !a.link) { return 1; }
+      return a.name.localeCompare(b.name);
+    });
+    console.log("Loaded in view: %O", lines);
 
     const noLinesMsg = lines.length > 0 ? null : (
       <span>Nothing to add - first create some <a href="/single">basic lines</a></span>
