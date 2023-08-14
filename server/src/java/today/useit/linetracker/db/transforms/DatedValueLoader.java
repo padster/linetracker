@@ -29,7 +29,6 @@ public class DatedValueLoader extends BaseLoader<Pair<String, DatedValue>> {
     double value = row.get("v").getDoubleValue();
     String path = (String) row.get("__key__").getRecordValue().get("path").getValue();
     String[] parts = path.split(", ");
-    System.out.println(parts);
     String parent = parts[1].substring(1, parts[1].length() - 1);
     String timestamp = parts[3];
 

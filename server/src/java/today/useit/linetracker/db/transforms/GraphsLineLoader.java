@@ -29,11 +29,7 @@ public class GraphsLineLoader extends BaseLoader<GraphsLineMeta> {
     String id = this.getId(row);
     // String uid = row.get("uid").getStringValue(); // TODO
     String name = row.get("name").getStringValue();
-
-    String childMeta = (String) row.get("childMetadata").getValue();
-    List<ChildEntry> children = this.extractIds(childMeta).stream()
-      .map(childId -> new ChildEntry(this.lineTypes.getTypeForID(childId), childId))
-      .collect(Collectors.toList());
+    List<ChildEntry> children = this.extractChildren(lineTypes, row.get("childMetadata").getStringValue());
 
     GraphsLineMeta result = new GraphsLineMeta();
     result.setId(id);

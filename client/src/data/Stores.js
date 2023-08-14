@@ -22,14 +22,16 @@ const Stores = {
       return undefined;
     }
     return childIds.map(child => {
-      let line = undefined;
+      let name = undefined;
       if (child.type === "single") {
-        line = allSingle.find(s => s.id === child.id);
+        const line = allSingle.find(s => s.id === child.id);
+        name = line === undefined ? '???' : line.name;
       } else if (child.type === "compos") {
-        line = allCompos.find(s => s.id === child.id);
+        const line = allCompos.find(s => s.id === child.id);
+        name = line === undefined ? '???' : line.name;
+      } else if (child.type === "const") {
+        name = `Constant (${child.value})`
       }
-      console.log(line);
-      const name = line === undefined ? '???' : line.name;
       return {...child, name};
     });
   }

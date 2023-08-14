@@ -71,7 +71,10 @@ public class Migration {
   public static void remapIDs(HasChildren meta, Map<String, String> idRemap) {
     meta.setChildren(
       meta.children().stream()
-        .map(child -> new ChildEntry(child.type, idRemap.get(child.id)))
+        .map(child -> child.id != null
+          ? new ChildEntry(child.type, idRemap.get(child.id))
+          : new ChildEntry(child.type, child.value)
+        )
         .collect(Collectors.toList())
     );
   }

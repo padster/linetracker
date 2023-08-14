@@ -14,8 +14,8 @@ import javax.inject.Inject;
 
 /** Action to generate JSONP to get one Composite line. */
 public abstract class BaseItemHandler<T> implements Handler {
-  private final ItemStore<T> itemStore;
-  private final JsonParser<T> parser;
+  protected final ItemStore<T> itemStore;
+  protected final JsonParser<T> parser;
 
   BaseItemHandler(ItemStore<T> itemStore, JsonParser<T> parser) {
     this.itemStore = itemStore;

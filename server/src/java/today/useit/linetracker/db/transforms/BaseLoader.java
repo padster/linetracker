@@ -66,14 +66,24 @@ public abstract class BaseLoader<T> {
 
   // Utils
 
-  protected List<String> extractIds(String json) {
+  protected List<ChildEntry> extractChildren(LineTypeLoader lineTypes, String json) {
     if (json == null) {
-      return new ArrayList<String>();
+      return new ArrayList<ChildEntry>();
     }
 
     Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
     List<Map<String, String>> childMeta = this.gson.fromJson(json, type);
-    return childMeta.stream().map(c -> c.get("id")).collect(Collectors.toList());
+
+    List<ChildEntry> childEntries = new ArrayList<>();
+    for (Map<String, String> child : childMeta) {
+      if (child.containsKey("id")) {
+        String childId = child.get("id");
+        childEntries.add(new ChildEntry(lineTypes.getTypeForID(childId), childId));
+      } else {
+        childEntries.add(new ChildEntry("const", Double.parseDouble(child.get("const"))));
+      }
+    }
+    return childEntries;
   }
 
   protected String getId(FieldValueList row) {
