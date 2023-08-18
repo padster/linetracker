@@ -30,6 +30,7 @@ public class Server {
     // Parse flags... (--port=)
     String portFlag = maybeGetFlag(args, "port");
     int port = portFlag != null ? Integer.parseInt(portFlag) : 80;
+    logger.info("Running on :" + port + "...");
 
     String storeType = maybeGetFlag(args, "store");
 

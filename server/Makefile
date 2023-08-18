@@ -1,5 +1,5 @@
 build:
-	 mvn compile assembly:assembly
+	 mvn package
 
 run_memorystore: build
 	java -jar target/server.jar --port 8080
