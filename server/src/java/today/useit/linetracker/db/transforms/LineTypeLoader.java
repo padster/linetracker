@@ -49,7 +49,7 @@ public class LineTypeLoader extends BaseLoader<Pair<String, String>> {
     }
     if (!this.cache.containsKey(id)) {
       System.err.println("Unknown type for id: " + id);
-      return "s";
+      return null;
     }
     return this.cache.get(id);
   }

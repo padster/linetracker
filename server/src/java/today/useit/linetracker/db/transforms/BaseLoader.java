@@ -78,7 +78,12 @@ public abstract class BaseLoader<T> {
     for (Map<String, String> child : childMeta) {
       if (child.containsKey("id")) {
         String childId = child.get("id");
-        childEntries.add(new ChildEntry(lineTypes.getTypeForID(childId), childId));
+        String lineType = lineTypes.getTypeForID(childId);
+        if (lineType == null) {
+          System.out.println("Skipping " + childId + ", deleted?");
+        } else {
+          childEntries.add(new ChildEntry(lineTypes.getTypeForID(childId), childId));
+        }
       } else {
         childEntries.add(new ChildEntry("const", Double.parseDouble(child.get("const"))));
       }

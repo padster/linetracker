@@ -2,7 +2,9 @@
 
 Still remaining:
  * UI: Graph doesn't show values on click.
- * Cash v Market and Future Ratio Target not showing up
+ * Run webapp on GCP
+ * Add support for google authentication
+ * Map auth ID to old ID
  * Clean up BaseLoader (& other loader comments) & Migration class.
  * run!
 
