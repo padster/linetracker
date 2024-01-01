@@ -4,6 +4,9 @@ build:
 run_memorystore: build
 	java -jar target/server.jar --port 8080
 
+run_memorystore_with_client: build
+	java -jar target/server.jar --port 8080 --client_path 2023_08_18
+
 local_datastore:
 	gcloud beta emulators datastore start --project linetracking --data-dir cloudstore --host-port localhost:8765
 

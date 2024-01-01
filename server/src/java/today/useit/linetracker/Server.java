@@ -34,19 +34,21 @@ public class Server {
 
     String storeType = maybeGetFlag(args, "store");
 
+    String clientPath = maybeGetFlag(args, "client_path");
+
     try {
       // Run Guice, and start the server it provides.
       Injector injector = Guice.createInjector(
           new ParserModule(),
-          new BindingModule(),
+          new BindingModule(clientPath),
           new ServerModule(port, storeType)
       );
 
       // HACK - migrate in memory first
-      logger.info("Running test migration first...");
-      Migration m = new Migration();
-      m.loadData("113641087749801482038", injector.getInstance(Stores.class));
-      logger.info("Migration complete!");
+      // logger.info("Running test migration first...");
+      // Migration m = new Migration();
+      // m.loadData("113641087749801482038", injector.getInstance(Stores.class));
+      // logger.info("Migration complete!");
 
 
       HttpServer server = injector.getInstance(HttpServer.class);
