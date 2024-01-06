@@ -1,36 +1,38 @@
 package today.useit.linetracker.handlers.data;
 
-import com.github.padster.guiceserver.handlers.Handler;
+import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+
+import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
 import com.github.padster.guiceserver.json.JsonParser;
+import com.sun.net.httpserver.HttpExchange;
+
+import jakarta.inject.Inject;
+import today.useit.linetracker.handlers.BaseCorsAwareHandler;
 import today.useit.linetracker.model.Settings;
 import today.useit.linetracker.store.Stores;
 
-import com.sun.net.httpserver.HttpExchange;
-import org.apache.commons.io.IOUtils;
-
-import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.inject.Inject;
-
 /** Action to return timeseries values for lines, and add/remove them. */
-public class SettingsHandler implements Handler {
+@LoginRequired
+public class SettingsHandler extends BaseCorsAwareHandler {
   private final JsonParser<Settings> settingsParser;
   private final Stores stores;
+  // private final Provider<HttpExchange> exchangeProvider; // HACK
 
   @Inject SettingsHandler(
     Stores stores,
     JsonParser<Settings> settingsParser
+    // @RequestScoped Provider<HttpExchange> exchangeProvider
   ) {
     this.stores = stores;
     this.settingsParser = settingsParser;
+    // this.exchangeProvider = exchangeProvider;
   }
 
-  public JsonResponse handle(Map<String, String> pathDetails, HttpExchange exchange)
+  @Override
+  public JsonResponse handleInternal(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
     String method = exchange.getRequestMethod();
     if ("GET".equals(method)) {
@@ -47,7 +49,7 @@ public class SettingsHandler implements Handler {
   public JsonResponse handleGet(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
     Settings settings = this.stores.settingsStore().getSettings();
-   return new JsonResponse(settingsParser.toJson(settings));
+    return new JsonResponse(settingsParser.toJson(settings));
   }
 
   public JsonResponse handlePost(Map<String, String> pathDetails, HttpExchange exchange)

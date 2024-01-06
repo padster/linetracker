@@ -1,8 +1,10 @@
 package today.useit.linetracker.handlers.data;
 
-import com.github.padster.guiceserver.handlers.Handler;
+import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
 import com.github.padster.guiceserver.json.JsonParser;
+
+import today.useit.linetracker.handlers.BaseCorsAwareHandler;
 import today.useit.linetracker.model.DateFormat;
 import today.useit.linetracker.model.DatedValue;
 import today.useit.linetracker.model.ValueInsertRequest;
@@ -14,14 +16,14 @@ import org.apache.commons.io.IOUtils;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 
 /** Action to return timeseries values for lines, and add/remove them. */
-public class ValuesHandler implements Handler {
+@LoginRequired
+public class ValuesHandler extends BaseCorsAwareHandler {
   private final JsonParser<List<DatedValue>> valuesParser;
   private final JsonParser<ValueInsertRequest> insertParser;
   private final Stores stores;
@@ -36,7 +38,8 @@ public class ValuesHandler implements Handler {
     this.insertParser = insertParser;
   }
 
-  public JsonResponse handle(Map<String, String> pathDetails, HttpExchange exchange)
+  @Override
+  public JsonResponse handleInternal(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
     String method = exchange.getRequestMethod();
     if ("GET".equals(method)) {
@@ -89,7 +92,7 @@ public class ValuesHandler implements Handler {
 
   private void singleInsert(String id, String yyyymmdd, String value) {
     try {
-      long ignore = DateFormat.dateToMs(yyyymmdd);
+      DateFormat.dateToMs(yyyymmdd);
       double valueAsNumber = Double.valueOf(value);
       System.out.println("Insert " + valueAsNumber + " at " + yyyymmdd);
       this.stores.valuesStore().addValuesToSingleLine(

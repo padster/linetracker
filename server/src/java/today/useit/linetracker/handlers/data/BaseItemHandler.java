@@ -1,19 +1,17 @@
 package today.useit.linetracker.handlers.data;
 
-import com.github.padster.guiceserver.handlers.Handler;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
 import com.github.padster.guiceserver.json.JsonParser;
-import today.useit.linetracker.model.ChildEntry;
-import today.useit.linetracker.model.ComposLineMeta;
+
+import today.useit.linetracker.handlers.BaseCorsAwareHandler;
 import today.useit.linetracker.store.ItemStore;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import java.util.Map;
-import javax.inject.Inject;
 
 /** Action to generate JSONP to get one Composite line. */
-public abstract class BaseItemHandler<T> implements Handler {
+public abstract class BaseItemHandler<T> extends BaseCorsAwareHandler {
   protected final ItemStore<T> itemStore;
   protected final JsonParser<T> parser;
 
@@ -22,7 +20,8 @@ public abstract class BaseItemHandler<T> implements Handler {
     this.parser = parser;
   }
 
-  public JsonResponse handle(Map<String, String> pathDetails, HttpExchange exchange)
+  @Override
+  public JsonResponse handleInternal(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
     String method = exchange.getRequestMethod();
     if ("GET".equals(method)) {

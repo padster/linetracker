@@ -9,6 +9,7 @@ import GraphsChart from './elements/GraphsChart.js';
 import GraphsItem from './elements/GraphsItem.js';
 import GraphsList from './elements/GraphsList.js';
 import HomePage from './elements/HomePage.js';
+import LoginPage from './elements/LoginPage.js';
 import SingleChart from './elements/SingleChart.js';
 import SingleItem from './elements/SingleItem.js';
 import SingleList from './elements/SingleList.js';
@@ -40,8 +41,28 @@ class App extends Component {
     );
   }
 
+  loginRequired(pathParts) {
+    const lr = pathParts.length != 1 || pathParts[0] != "login";
+    console.log("Login required? " + lr);
+    return lr;
+  }
+
+  hasLoginCookie() {
+    const hasCookie = document.cookie.indexOf("_gsID=") != -1;
+    console.log("Has login cookie? " + hasCookie);
+    return hasCookie;
+  }
+
   renderContent() {
     const pathParts = window.location.pathname.split("/").splice(1);
+
+    if (this.loginRequired(pathParts) && !this.hasLoginCookie()) {
+      // Redirect to login page
+      console.log("Redirecting to login page");
+      window.location.assign('/login?origin=' + window.location.pathname);
+      return;
+    }
+
     if (pathParts.length === 1) {
       switch (pathParts[0]) {
         case 'single':
@@ -52,6 +73,8 @@ class App extends Component {
           return <GraphsList />;
         case 'allInputs':
           return <AllInputsList />;
+        case 'login':
+          return <LoginPage />;
         case '': // Home
           return <HomePage />;
         default: // no-op

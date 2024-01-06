@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
   protected final Datastore db;
@@ -32,7 +32,7 @@ public abstract class CloudItemStore<T extends HasId> implements ItemStore<T> {
     System.out.println("LISTING");
     Query<Entity> query = Query.newEntityQueryBuilder()
       .setKind(this.dbKind)
-      .setFilter(Keys.currentUserFilter())
+      .setFilter(Keys.currentUserFilter(userProvider.get()))
       .setOrderBy(OrderBy.asc("name"))
       .setLimit(Limits.LINE_LIMIT_SINGLE_FETCH)
       .build();

@@ -6,7 +6,6 @@ import today.useit.linetracker.model.DatedValue;
 import today.useit.linetracker.model.DateFormat;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

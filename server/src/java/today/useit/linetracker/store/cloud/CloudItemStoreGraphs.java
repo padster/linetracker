@@ -4,9 +4,7 @@ import today.useit.linetracker.model.*;
 
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
-
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 public class CloudItemStoreGraphs extends CloudItemStore<GraphsLineMeta> {
   public CloudItemStoreGraphs(Datastore db, Provider<String> userProvider) {

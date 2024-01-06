@@ -1,23 +1,27 @@
 package today.useit.linetracker.handlers.data;
 
-import com.github.padster.guiceserver.handlers.Handler;
+import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
+
+import today.useit.linetracker.handlers.BaseCorsAwareHandler;
 import today.useit.linetracker.store.Stores;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import java.util.Map;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /** Handler which is used to remove a single dated value from a line. */
-public class DatedValueHandler implements Handler {
+@LoginRequired
+public class DatedValueHandler extends BaseCorsAwareHandler {
   private final Stores stores;
 
   @Inject DatedValueHandler(Stores stores) {
     this.stores = stores;
   }
 
-  public JsonResponse handle(Map<String, String> pathDetails, HttpExchange exchange)
+  @Override
+  public JsonResponse handleInternal(Map<String, String> pathDetails, HttpExchange exchange)
       throws Exception {
     String method = exchange.getRequestMethod();
     if ("DELETE".equals(method)) {

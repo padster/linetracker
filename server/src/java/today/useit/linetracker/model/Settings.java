@@ -1,7 +1,5 @@
 package today.useit.linetracker.model;
 
-import java.util.List;
-
 public class Settings {
   public final String homeID;
 

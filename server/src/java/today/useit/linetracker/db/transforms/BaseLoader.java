@@ -96,7 +96,7 @@ public abstract class BaseLoader<T> {
   }
 
   protected String fmt(T result) {
-    JsonParserImpl parser = new JsonParserImpl<T>(
+    JsonParserImpl<T> parser = new JsonParserImpl<T>(
       Providers.of(this.gson), new TypeToken<T>(){}.getType());
     return parser.toJson(result);
   }

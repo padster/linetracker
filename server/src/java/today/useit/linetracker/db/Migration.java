@@ -17,11 +17,6 @@ import today.useit.linetracker.model.*;
 import today.useit.linetracker.store.*;
 
 import com.google.gson.Gson;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.sun.net.httpserver.HttpServer;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +46,7 @@ public class Migration {
     List<T> remaining = new ArrayList<>();
 
     for (T line : initial) {
-      Set<String> childIds = line.children().stream().map(c -> c.id).collect(Collectors.toSet());
+      // Set<String> childIds = line.children().stream().map(c -> c.id).collect(Collectors.toSet());
       boolean hasChildToSort = line.children().stream()
         .anyMatch(child -> toSortIDs.contains(child.id));
       if (hasChildToSort) {
@@ -179,13 +174,13 @@ public class Migration {
   }
 
   // If a --flagName is given, return the next string, otherwise null.
-  private static String maybeGetFlag(String[] args, String flagName) {
-    String toMatch = "--" + flagName;
-    for (int i = 0; i + 1 < args.length; i++) {
-      if (toMatch.equals(args[i])) {
-        return args[i + 1];
-      }
-    }
-    return null;
-  }
+  // private static String maybeGetFlag(String[] args, String flagName) {
+  //   String toMatch = "--" + flagName;
+  //   for (int i = 0; i + 1 < args.length; i++) {
+  //     if (toMatch.equals(args[i])) {
+  //       return args[i + 1];
+  //     }
+  //   }
+  //   return null;
+  // }
 }

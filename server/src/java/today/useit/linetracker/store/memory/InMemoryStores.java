@@ -3,9 +3,11 @@ package today.useit.linetracker.store.memory;
 import today.useit.linetracker.model.*;
 import today.useit.linetracker.store.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import com.github.padster.guiceserver.Annotations.CurrentUser;
+import com.google.inject.Inject;
+
+import jakarta.inject.Provider;
 
 public class InMemoryStores implements Stores {
   private final ItemStore<SingleLineMeta> singleStore;
@@ -15,7 +17,8 @@ public class InMemoryStores implements Stores {
   private final ChildStore                 childStore;
   private final SettingsStore           settingsStore;
 
-  public InMemoryStores() {
+  @Inject
+  public InMemoryStores(@CurrentUser Provider<String> currentUser) {
     this.childStore = new InMemoryChildStore();
     this.singleStore = new InMemoryItemStore<SingleLineMeta>();
     this.composStore = new ItemStoreWithChildren<ComposLineMeta>(
@@ -24,7 +27,7 @@ public class InMemoryStores implements Stores {
       new InMemoryItemStore<GraphsLineMeta>(), childStore, "graphs");
     this.valuesStore = new CalculatingValuesStore(
       new InMemorySingleLineValuesStore(), composStore, childStore);
-    this.settingsStore = new InMemorySettingsStore();
+    this.settingsStore = new InMemorySettingsStore(currentUser);
 
     // Seed with some fake test data:
     SingleLineMeta sline = new SingleLineMeta();

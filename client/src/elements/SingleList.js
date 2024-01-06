@@ -28,7 +28,7 @@ class SingleList extends Component {
       return <LoadingIndicator />;
     }
 
-    const lines = loadedLinesz.sort((a, b) => {
+    const lines = loadedLines.sort((a, b) => {
       if (a.link && !b.link) { return -1; }
       if (b.link && !a.link) { return 1; }
       return a.name.localeCompare(b.name);

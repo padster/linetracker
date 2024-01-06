@@ -3,10 +3,8 @@ package today.useit.linetracker.store.cloud;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
-import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.PathElement;
 import com.google.cloud.datastore.Query;
-import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 
 import java.util.Random;
@@ -60,7 +58,7 @@ public final class Keys {
   }
 
   // HACK - move elsewhere?
-  public static PropertyFilter currentUserFilter() {
-    return PropertyFilter.eq("uid", "HACK");
+  public static PropertyFilter currentUserFilter(String userId) {
+    return PropertyFilter.eq("uid", userId);
   }
 }

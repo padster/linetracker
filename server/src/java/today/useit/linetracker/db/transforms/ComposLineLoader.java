@@ -1,12 +1,7 @@
 package today.useit.linetracker.db.transforms;
 
 import today.useit.linetracker.model.*;
-import today.useit.linetracker.db.transforms.BaseLoader;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.cloud.bigquery.FieldValueList;
 import com.google.gson.Gson;
 
@@ -27,9 +22,9 @@ public class ComposLineLoader extends BaseLoader<ComposLineMeta> {
 
   public ComposLineMeta transformRow(FieldValueList row) {
     String id = this.getId(row);
-    // String uid = row.get("uid").getStringValue(); // TODO
+    // String uid = row.get("uid").getStringValue();
     String name = (String) row.get("name").getValue();
-    String link = (String) row.get("link").getValue();
+    // String link = (String) row.get("link").getValue();
     String op = (String) row.get("op").getValue();
     List<ChildEntry> children = this.extractChildren(lineTypes, row.get("childMetadata").getStringValue());
 

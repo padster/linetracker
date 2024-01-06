@@ -7,10 +7,9 @@ import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
-import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.Transaction;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 public class CloudSettingsStore implements SettingsStore {
   private final Datastore db;
@@ -25,7 +24,6 @@ public class CloudSettingsStore implements SettingsStore {
 
   /** @return Settings for the current user. */
   public Settings getSettings() {
-    System.out.println("GETTING SETTINGS FOR " + userProvider.get());
     Entity asEntity = db.get(keyFactory.newKey(userProvider.get()));
     return entityToSettings(asEntity);
   }

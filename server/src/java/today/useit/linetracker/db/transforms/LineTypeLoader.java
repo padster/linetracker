@@ -1,13 +1,7 @@
 package today.useit.linetracker.db.transforms;
 
-import today.useit.linetracker.model.*;
-import today.useit.linetracker.db.transforms.BaseLoader;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javafx.util.Pair;
 
 import com.google.cloud.bigquery.FieldValueList;
@@ -29,7 +23,7 @@ public class LineTypeLoader extends BaseLoader<Pair<String, String>> {
   }
 
   public Pair<String, String> transformRow(FieldValueList row) {
-    return new Pair(
+    return new Pair<>(
       (String) row.get("id").getValue(),
       (String) row.get("type").getValue()
     );

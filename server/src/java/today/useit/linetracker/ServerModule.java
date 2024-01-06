@@ -1,11 +1,11 @@
 package today.useit.linetracker;
 
+import com.github.padster.guiceserver.auth.RouteAuthenticator;
 import com.github.padster.guiceserver.handlers.RouteHandler;
-import com.github.padster.guiceserver.Annotations.Bindings;
 import com.github.padster.guiceserver.Annotations.ServerPort;
-import com.github.padster.guiceserver.Annotations.CurrentUser;
 import today.useit.linetracker.store.cloud.CloudStores;
 import today.useit.linetracker.store.memory.InMemoryStores;
+import today.useit.linetracker.auth.JwtUtil;
 import today.useit.linetracker.store.Stores;
 
 import com.google.cloud.datastore.Datastore;
@@ -13,17 +13,9 @@ import com.google.cloud.datastore.DatastoreOptions;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import redis.clients.jedis.Jedis;
-
-import javax.inject.Provider;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
 /** Configures the HttpServer within Guice. */
 public class ServerModule extends AbstractModule {
@@ -61,19 +53,19 @@ public class ServerModule extends AbstractModule {
       throw new IllegalArgumentException("Unknown store: " + storeType);
     }
 
-    // TODO: properly
-    bind(String.class).annotatedWith(CurrentUser.class).toInstance("HACK");
+    bind(JwtUtil.class).asEagerSingleton();
   }
 
   @Provides @Singleton
   HttpServer provideServer(
     @ServerPort int serverPort,
-    RouteHandler routeHandler
+    RouteHandler routeHandler,
+    RouteAuthenticator routeAuthenticator
   ) throws IOException {
     try {
       // Create a server, and route every request through the base handler.
       HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
-      server.createContext("/", routeHandler);
+      server.createContext("/", routeHandler).setAuthenticator(routeAuthenticator);
       server.setExecutor(null); // Default executor
       return server;
     } catch (Throwable t) {

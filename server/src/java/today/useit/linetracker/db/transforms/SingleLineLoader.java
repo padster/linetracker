@@ -1,12 +1,6 @@
 package today.useit.linetracker.db.transforms;
 
 import today.useit.linetracker.model.*;
-import today.useit.linetracker.db.transforms.BaseLoader;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.cloud.bigquery.FieldValueList;
 import com.google.gson.Gson;
 

@@ -1,13 +1,8 @@
 package today.useit.linetracker.db.transforms;
 
 import today.useit.linetracker.model.*;
-import today.useit.linetracker.db.transforms.BaseLoader;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 import javafx.util.Pair;
 
 import com.google.cloud.bigquery.FieldValueList;
@@ -37,7 +32,7 @@ public class DatedValueLoader extends BaseLoader<Pair<String, DatedValue>> {
     String dayString = simpleDateFormat.format(new Date(Long.parseLong(timestamp)));
 
     Pair<String, DatedValue> result =
-      new Pair(parent, new DatedValue(dayString, value));
+      new Pair<>(parent, new DatedValue(dayString, value));
     return result;
   }
 }

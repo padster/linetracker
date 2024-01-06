@@ -1,23 +1,14 @@
 package today.useit.linetracker;
 
 import com.github.padster.guiceserver.BaseBindingModule;
+import com.github.padster.guiceserver.auth.AppAuthenticator;
+
 import today.useit.linetracker.handlers.*;
 import today.useit.linetracker.handlers.data.*;
 import today.useit.linetracker.Annotations.ClientPath;
+import today.useit.linetracker.auth.AuthenticatorImpl;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.MustacheFactory;
-import com.google.inject.AbstractModule;
-import com.google.inject.BindingAnnotation;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
 import com.google.inject.util.Providers;
-
-import javax.inject.Provider;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Provides all the path -> handler bindings, and a way for other modules to configure them.
@@ -31,6 +22,8 @@ public class BindingModule extends BaseBindingModule {
 
   @Override protected void configure() {
     super.configure();
+
+    bind(AppAuthenticator.class).to(AuthenticatorImpl.class);
 
     if (this.clientPath != null) {
       bind(String.class).annotatedWith(ClientPath.class).toInstance(this.clientPath);
@@ -47,6 +40,7 @@ public class BindingModule extends BaseBindingModule {
   }
 
   protected void bindDataHandlers() {
+    // NOTE: nginx only forwards data handlers.
     bindDataHandler("/compos", ListComposHandler.class);
     bindDataHandler("/graphs", ListGraphsHandler.class);
     bindDataHandler("/single", ListSingleHandler.class);
@@ -57,5 +51,7 @@ public class BindingModule extends BaseBindingModule {
     bindDataHandler("/values/single/:id/:yyyymmdd", DatedValueHandler.class);
     bindDataHandler("/:type/:id/children", EditChildrenHandler.class);
     bindDataHandler("/settings", SettingsHandler.class);
+
+    bindDataHandler("/handle_auth", AuthHandler.class);
   }
 }

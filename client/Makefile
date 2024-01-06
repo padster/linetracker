@@ -1,7 +1,12 @@
+FORCE: ;
+
+run_local:
+	REACT_APP_SERVER='http://localhost:8080' npm run start
+
 run:
 	npm start
 
-build:
+build: FORCE
 	npm run build
 
 deploy:

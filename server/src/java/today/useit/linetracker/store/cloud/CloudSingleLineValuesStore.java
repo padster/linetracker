@@ -14,7 +14,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 public class CloudSingleLineValuesStore implements SingleLineValuesStore {
   private final Datastore db;

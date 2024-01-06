@@ -6,8 +6,8 @@ import today.useit.linetracker.store.*;
 
 import com.google.cloud.datastore.Datastore;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class CloudStores implements Stores {
   private final ItemStore<SingleLineMeta> singleStore;

@@ -56,6 +56,7 @@ public class Server {
       server.start();
     } catch (Throwable t) {
       t.printStackTrace();
+      throw t;
     }
   }
 

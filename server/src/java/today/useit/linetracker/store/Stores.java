@@ -2,8 +2,6 @@ package today.useit.linetracker.store;
 
 import today.useit.linetracker.model.*;
 
-import java.util.List;
-
 /** Holder of all stores used within the app. */
 public interface Stores {
   /** @return The store for single line metadata. */

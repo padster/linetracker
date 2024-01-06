@@ -1,7 +1,5 @@
 package today.useit.linetracker.model;
 
-import java.util.List;
-
 public class ChildEntry {
   // NOTE: shortened version, 'single'/'compos'/'const'. TODO: switch to enum.
   public final String type;

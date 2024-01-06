@@ -28,7 +28,10 @@ class ItemStore {
     // Hmm, odd.
     window.$.ajaxSetup({
       scriptCharset: "utf-8",
-      contentType: "application/json; charset=utf-8"
+      contentType: "application/json; charset=utf-8",
+      xhrFields: {
+        withCredentials: true
+      },
     });
   }
 
