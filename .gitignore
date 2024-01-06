@@ -2,6 +2,7 @@
 .idea/
 server/padster-linetracker.iml
 server/secret.key 
+deploy/*.jar
 
 # Client
 client/node_modules
