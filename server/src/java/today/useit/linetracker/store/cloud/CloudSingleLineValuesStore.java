@@ -57,6 +57,19 @@ public class CloudSingleLineValuesStore implements SingleLineValuesStore {
     return true;
   }
 
+  public boolean removeAllValues(String id) {
+    verifyUserCanRead(id);
+    Query<Entity> query = Keys.datedValueQuery(db, id);
+    QueryResults<Entity> result = db.run(query);
+    System.out.println("Removing all values for " + id + "...");
+    final Iterable<Entity> resultIterable = () -> result;
+    Stream<Entity> resultStream = StreamSupport.stream(resultIterable.spliterator(), false);
+    resultStream.forEach(entity -> {
+      db.delete(entity.getKey());
+    });
+    return true;
+  }
+
   // TODO - test a user can read this line first...
   private void verifyUserCanRead(String id) {
     // nothing yet...

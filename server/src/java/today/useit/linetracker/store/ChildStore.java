@@ -19,4 +19,7 @@ public interface ChildStore {
 
   /** Removes a single child from a line. */
   boolean removeChild(String fullID, ChildEntry child);
+
+  /** Removes all children from a line. */
+  boolean removeAllChildren(String fullID);
 }

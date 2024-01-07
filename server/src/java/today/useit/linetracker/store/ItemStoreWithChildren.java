@@ -51,7 +51,8 @@ public class ItemStoreWithChildren<T extends HasChildren & HasId> implements Ite
   }
 
   public boolean deleteItem(String id) {
-    // TODO - wipe values from child store?
+    String itemFullID = this.type + "/" + id;
+    this.childStore.removeAllChildren(itemFullID);
     return this.base.deleteItem(id);
   }
 }

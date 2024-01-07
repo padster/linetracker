@@ -17,4 +17,7 @@ public interface ValuesStore {
 
   /** Remove a value at a given date for a single line. */
   boolean removeValueFromSingleLine(String id, String date);
+
+  /** Remove all values for a single line. */
+  boolean removeAllValuesFromSingleLine(String id);
 }

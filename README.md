@@ -3,7 +3,6 @@
 
 ## TODO:
 
-* Create script to delete all entries in database
 * Implement CloudChildStore
 * Deploy
 ** Working version running on cloud run

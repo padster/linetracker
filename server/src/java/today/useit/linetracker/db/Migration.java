@@ -187,6 +187,71 @@ public class Migration {
     }
   }
 
+  private static void migrateUser(String userId, String email) {
+    // Migrate to datastore
+    Datastore db = DatastoreOptions.newBuilder()
+      .setProjectId("useful-theory-217216")
+      .setDatabaseId("linetracker")
+      .build().getService();
+    Provider<String> userProvider = new Provider<String>() {
+      public String get() {
+        return email;
+      }
+    };
+    Stores stores = new CloudStores(db, userProvider);
+    loadData(userId, stores); // one user at a time.
+  }
+
+  //
+  // USER deletion
+  //
+
+  private static void removeData(Stores stores) {
+    ValuesStore valuesStore = stores.valuesStore();
+
+    ItemStore<GraphsLineMeta> graphStore = stores.graphsStore();
+    List<GraphsLineMeta> graphs = graphStore.listItems();
+    System.out.println("Removing " + graphs.size() + " graphs...");
+    for (GraphsLineMeta graph : graphs) {
+      graphStore.deleteItem(graph.id());
+    }
+    System.out.println("Graphs removed.");
+
+    ItemStore<ComposLineMeta> composStore = stores.composStore();
+    List<ComposLineMeta> compos = composStore.listItems();
+    System.out.println("Removing " + compos.size() + " compos...");
+    for (ComposLineMeta composLine : compos) {
+      composStore.deleteItem(composLine.id());
+    }
+    System.out.println("Compos removed.");
+
+    ItemStore<SingleLineMeta> singleStore = stores.singleStore();
+    List<SingleLineMeta> singles = singleStore.listItems();
+    System.out.println("Removing " + singles.size() + " singles...");
+    for (SingleLineMeta single : singles) {
+      System.out.println("Removing values for " + single.id);
+      valuesStore.removeAllValuesFromSingleLine(single.id);
+      singleStore.deleteItem(single.id());
+    }
+    System.out.println("Singles removed.");
+
+    stores.settingsStore().updateSettings(new Settings("DELETEME"));   
+  }
+
+  private static void deleteUser(String email) {
+    Datastore db = DatastoreOptions.newBuilder()
+      .setProjectId("useful-theory-217216")
+      .setDatabaseId("linetracker")
+      .build().getService();
+    Provider<String> userProvider = new Provider<String>() {
+      public String get() {
+        return email;
+      }
+    };
+    Stores stores = new CloudStores(db, userProvider);
+    removeData(stores);
+  }
+
   public static void main(String[] args) {
     // Set up logging to file...
     try {
@@ -196,19 +261,8 @@ public class Migration {
       return;
     }
 
-    // Migrate to datastore
-    
-    Datastore db = DatastoreOptions.newBuilder()
-      .setProjectId("useful-theory-217216")
-      .setDatabaseId("linetracker")
-      .build().getService();
-    Provider<String> userProvider = new Provider<String>() {
-      public String get() {
-        return "padsterpat@gmail.com";
-      }
-    };
-    Stores stores = new CloudStores(db, userProvider);
-    loadData("113641087749801482038", stores); // one user at a time.
+    // migrateUser("113641087749801482038",  "padsterpat@gmail.com");
+    deleteUser("padsterpat@gmail.com");
   }
 
   // If a --flagName is given, return the next string, otherwise null.

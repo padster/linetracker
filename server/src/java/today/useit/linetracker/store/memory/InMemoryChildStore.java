@@ -37,6 +37,13 @@ public class InMemoryChildStore implements ChildStore {
     return children.remove(child);
   }
 
+  public boolean removeAllChildren(String fullID) {
+    String[] parts = fullID.split("/");
+    final List<ChildEntry> children = this.safeGet(parts[0], parts[1]);
+    children.clear();
+    return true;
+  }
+
   private List<ChildEntry> safeGet(String type, String id) {
     if (!entries.containsKey(type)) {
       entries.put(type, new HashMap<String, List<ChildEntry>>());

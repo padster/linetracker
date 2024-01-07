@@ -30,4 +30,9 @@ public class InMemorySingleLineValuesStore implements SingleLineValuesStore {
   public boolean removeValue(String id, String date) {
     return values(id).remove(new DatedValue(date, 0));
   }
+
+  public boolean removeAllValues(String id) {
+    this.lines.get(id).clear();
+    return true;
+  }
 }

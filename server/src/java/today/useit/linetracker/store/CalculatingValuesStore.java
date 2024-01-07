@@ -48,6 +48,10 @@ public class CalculatingValuesStore implements ValuesStore {
     return this.singleListValuesStore.removeValue(id, date);
   }
 
+  public boolean removeAllValuesFromSingleLine(String id) {
+    return this.singleListValuesStore.removeAllValues(id);
+  }
+
   ///
 
   private SortedSet<DatedValue> valueSetForSingle(String id) {

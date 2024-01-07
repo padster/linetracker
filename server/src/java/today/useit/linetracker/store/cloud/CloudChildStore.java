@@ -35,4 +35,9 @@ public class CloudChildStore implements ChildStore {
     // TODO
     return false;
   }
+
+  public boolean removeAllChildren(String fullID) {
+    // TODO
+    return false;
+  }
 }
