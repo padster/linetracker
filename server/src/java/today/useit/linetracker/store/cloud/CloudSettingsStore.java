@@ -53,6 +53,7 @@ public class CloudSettingsStore implements SettingsStore {
 
   // Settings -> Entity translator.
   private Entity settingsToEntity(Settings settings) {
+    System.out.println("Setting home ID of " + userProvider.get() + " to " + settings.homeID);  
     Key key = keyFactory.newKey(userProvider.get());
     return Entity.newBuilder(key)
       .set("homeID", settings.homeID)

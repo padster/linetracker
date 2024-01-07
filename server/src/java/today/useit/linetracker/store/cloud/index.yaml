@@ -1,0 +1,16 @@
+indexes:
+
+- kind: LS
+  properties:
+  - name: uid
+  - name: name
+
+- kind: LC
+  properties:
+  - name: uid
+  - name: name
+
+- kind: LG
+  properties:
+  - name: uid
+  - name: name

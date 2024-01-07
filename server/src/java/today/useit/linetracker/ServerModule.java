@@ -48,7 +48,12 @@ public class ServerModule extends AbstractModule {
       bind(Stores.class).to(CloudStores.class).asEagerSingleton();
       // bind(Stores.class).toInstance(new CloudStores(db));
     } else if ("datastore_gcp".equals(storeType)) {
-      System.out.println("> Storage: GCP Datastore. TODO: implement");
+      Datastore db = DatastoreOptions.newBuilder()
+        .setProjectId("useful-theory-217216")
+        .setDatabaseId("linetracker")
+        .build().getService();
+      bind(Datastore.class).toInstance(db);
+      bind(Stores.class).to(CloudStores.class).asEagerSingleton();
     } else {
       throw new IllegalArgumentException("Unknown store: " + storeType);
     }

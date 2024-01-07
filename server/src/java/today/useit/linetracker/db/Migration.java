@@ -12,11 +12,6 @@ Still remaining:
 
 package today.useit.linetracker.db;
 
-import today.useit.linetracker.db.transforms.*;
-import today.useit.linetracker.model.*;
-import today.useit.linetracker.store.*;
-
-import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +20,31 @@ import java.util.Set;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
+import com.google.gson.Gson;
+
+import jakarta.inject.Provider;
 import javafx.util.Pair;
+import today.useit.linetracker.db.transforms.ComposLineLoader;
+import today.useit.linetracker.db.transforms.DatedValueLoader;
+import today.useit.linetracker.db.transforms.GraphsLineLoader;
+import today.useit.linetracker.db.transforms.LineTypeLoader;
+import today.useit.linetracker.db.transforms.SettingsLoader;
+import today.useit.linetracker.db.transforms.SingleLineLoader;
+import today.useit.linetracker.model.ChildEntry;
+import today.useit.linetracker.model.ComposLineMeta;
+import today.useit.linetracker.model.DatedValue;
+import today.useit.linetracker.model.GraphsLineMeta;
+import today.useit.linetracker.model.HasChildren;
+import today.useit.linetracker.model.HasId;
+import today.useit.linetracker.model.Settings;
+import today.useit.linetracker.model.SingleLineMeta;
+import today.useit.linetracker.store.ItemStore;
+import today.useit.linetracker.store.Stores;
+import today.useit.linetracker.store.ValuesStore;
+import today.useit.linetracker.store.cloud.CloudStores;
 
 
 /**
@@ -79,6 +98,7 @@ public class Migration {
   public static <T extends HasId> void writeLines(
     List<T> lines, ItemStore<T> store, Map<String, String> idRemap
   ) {
+    int linesWritten = 0;
     for (T line : lines) {
       String oldId = line.id();
       if (line instanceof HasChildren) {
@@ -86,7 +106,9 @@ public class Migration {
       }
       String newId = store.createItem(line).id();
       idRemap.put(oldId, newId);
+      linesWritten++;
     }
+    logger.info("Wrote " + linesWritten + " lines");
   }
 
   public static void writeValues(
@@ -140,7 +162,9 @@ public class Migration {
       logger.info("Loading values...");
       List<Pair<String, DatedValue>> values = new DatedValueLoader(gson, uidToMigrate).loadAll();
       logger.info(values.size() + " values lines loaded!");
-      writeValues(values, stores.valuesStore(), idRemap);
+      if (stores != null) {
+        writeValues(values, stores.valuesStore(), idRemap);
+      }
 
       logger.info("Loading settings...");
       List<Settings> setData = new SettingsLoader(gson, uidToMigrate).loadAll();
@@ -152,7 +176,9 @@ public class Migration {
       if (userSetting.homeID != null) {
         userSetting = new Settings(idRemap.get(userSetting.homeID));
       }
-      stores.settingsStore().updateSettings(userSetting);
+      if (stores != null && userSetting.homeID != null) {
+        stores.settingsStore().updateSettings(userSetting);
+      }
 
 
     } catch (Exception e) {
@@ -170,7 +196,19 @@ public class Migration {
       return;
     }
 
-    loadData("113641087749801482038", null); // one user at a time.
+    // Migrate to datastore
+    
+    Datastore db = DatastoreOptions.newBuilder()
+      .setProjectId("useful-theory-217216")
+      .setDatabaseId("linetracker")
+      .build().getService();
+    Provider<String> userProvider = new Provider<String>() {
+      public String get() {
+        return "padsterpat@gmail.com";
+      }
+    };
+    Stores stores = new CloudStores(db, userProvider);
+    loadData("113641087749801482038", stores); // one user at a time.
   }
 
   // If a --flagName is given, return the next string, otherwise null.
