@@ -7,6 +7,8 @@ import com.google.cloud.datastore.PathElement;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 
+import today.useit.linetracker.model.ChildEntry;
+
 import java.util.Random;
 
 public final class Keys {
@@ -15,6 +17,7 @@ public final class Keys {
   public static final String GRAPHS_TYPE   = "LG";
   public static final String SETTINGS_TYPE = "ST";
   public static final String VALUE_TYPE    = "DV";
+  public static final String CHILD_TYPE    = "CH";
 
   private static final Random RANDOM = new Random();
   private static final int ID_LENGTH = 12;
@@ -54,6 +57,21 @@ public final class Keys {
     return Query.newEntityQueryBuilder()
       .setKind(VALUE_TYPE)
       .setFilter(PropertyFilter.hasAncestor(lineKey))
+      .build();
+  }
+
+  public static Key forChildEntry(Datastore db, String parentType, String parentId, ChildEntry childEntry) {
+    return db.newKeyFactory()
+      .addAncestors(PathElement.of(parentType, parentId))
+      .setKind(CHILD_TYPE)
+      .newKey(childEntry.getIdentifier());
+  }
+
+  public static Query<Entity> childEntryQuery(Datastore db, String parentType, String parentId) {
+    Key parentKey = db.newKeyFactory().setKind(parentType).newKey(parentId);
+    return Query.newEntityQueryBuilder()
+      .setKind(CHILD_TYPE)
+      .setFilter(PropertyFilter.hasAncestor(parentKey))
       .build();
   }
 

@@ -229,7 +229,6 @@ public class Migration {
     List<SingleLineMeta> singles = singleStore.listItems();
     System.out.println("Removing " + singles.size() + " singles...");
     for (SingleLineMeta single : singles) {
-      System.out.println("Removing values for " + single.id);
       valuesStore.removeAllValuesFromSingleLine(single.id);
       singleStore.deleteItem(single.id());
     }
@@ -261,8 +260,8 @@ public class Migration {
       return;
     }
 
-    // migrateUser("113641087749801482038",  "padsterpat@gmail.com");
     deleteUser("padsterpat@gmail.com");
+    migrateUser("113641087749801482038",  "padsterpat@gmail.com");
   }
 
   // If a --flagName is given, return the next string, otherwise null.

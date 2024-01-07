@@ -3,7 +3,12 @@
 
 ## TODO:
 
-* Implement CloudChildStore
+* Const fixes:
+** Don't link to const/undefined in child list.
+** Don't fetch from /_/values/const/undefined
+* Other fixes:
+** Popup on graph dot click
+** Fix $NaN.undefined for the estimator
 * Deploy
 ** Working version running on cloud run
 ** linetracker.useit.today redirection

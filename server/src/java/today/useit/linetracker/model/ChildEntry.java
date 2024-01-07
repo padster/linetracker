@@ -19,6 +19,14 @@ public class ChildEntry {
     this.value = value;
   }
 
+  public String getIdentifier() {
+    if (this.id != null) {
+      return this.type + "/" + this.id;
+    } else {
+      return this.type + "/" + this.value;
+    }
+  }
+
   @Override public int hashCode() {
     return type.hashCode() * 37 + (value != null ? value.hashCode() : id.hashCode());
   }
