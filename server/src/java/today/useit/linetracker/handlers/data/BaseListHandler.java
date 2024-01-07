@@ -18,11 +18,13 @@ public abstract class BaseListHandler<T> extends BaseCorsAwareHandler {
   private final JsonParser<T> itemParser;
   private final JsonParser<List<T>> listParser;
 
-  BaseListHandler(
+  protected BaseListHandler(
     ItemStore<T> itemStore,
     JsonParser<T> itemParser,
-    JsonParser<List<T>> listParser
+    JsonParser<List<T>> listParser,
+    String clientUri
   ) {
+    super(clientUri);
     this.itemStore = itemStore;
     this.itemParser = itemParser;
     this.listParser = listParser;

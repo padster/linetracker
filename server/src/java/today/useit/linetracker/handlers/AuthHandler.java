@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.handlers.PostParser;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.RedirectResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -18,7 +19,7 @@ import jakarta.inject.Inject;
 import today.useit.linetracker.auth.JwtUtil;
 
 /* Handle rewriting Google auth token with Linetracker's */
-public class AuthHandler extends BaseCorsAwareHandler{
+public class AuthHandler extends BaseCorsAwareHandler {
   /* Days to expire the login */
   private static final int LOGIN_EXPIRATION_DAYS = 30;
 
@@ -29,7 +30,8 @@ public class AuthHandler extends BaseCorsAwareHandler{
 
   private final JwtUtil jwt;
 
-  @Inject AuthHandler(JwtUtil jwt) {
+  @Inject AuthHandler(JwtUtil jwt, @ClientUri String clientUri) {
+    super(clientUri);
     this.jwt = jwt;
   }
 
@@ -83,7 +85,7 @@ public class AuthHandler extends BaseCorsAwareHandler{
     );
 
     try {
-      return new RedirectResponse(new URI("http://localhost:3000" + origin), true);
+      return new RedirectResponse(new URI(this.clientUri + origin), true);
     } catch (Exception e) {
       throw new UnsupportedOperationException();
     }

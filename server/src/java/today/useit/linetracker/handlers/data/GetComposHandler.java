@@ -1,5 +1,6 @@
 package today.useit.linetracker.handlers.data;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.json.JsonParser;
 import today.useit.linetracker.model.ComposLineMeta;
@@ -10,7 +11,11 @@ import jakarta.inject.Inject;
 /** Action to generate JSONP to get one Composite line. */
 @LoginRequired
 public class GetComposHandler extends BaseItemHandler<ComposLineMeta> {
-  @Inject GetComposHandler(Stores stores, JsonParser<ComposLineMeta> parser) {
-    super(stores.composStore(), parser);
+  @Inject GetComposHandler(
+    Stores stores, 
+    JsonParser<ComposLineMeta> parser, 
+    @ClientUri String clientUri
+  ) {
+    super(stores.composStore(), parser, clientUri);
   }
 }

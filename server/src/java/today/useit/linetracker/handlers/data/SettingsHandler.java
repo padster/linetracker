@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
 import com.github.padster.guiceserver.json.JsonParser;
@@ -19,16 +20,15 @@ import today.useit.linetracker.store.Stores;
 public class SettingsHandler extends BaseCorsAwareHandler {
   private final JsonParser<Settings> settingsParser;
   private final Stores stores;
-  // private final Provider<HttpExchange> exchangeProvider; // HACK
 
   @Inject SettingsHandler(
     Stores stores,
-    JsonParser<Settings> settingsParser
-    // @RequestScoped Provider<HttpExchange> exchangeProvider
+    JsonParser<Settings> settingsParser,
+    @ClientUri String clientUri
   ) {
+    super(clientUri);
     this.stores = stores;
     this.settingsParser = settingsParser;
-    // this.exchangeProvider = exchangeProvider;
   }
 
   @Override

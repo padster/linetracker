@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-const moment = require('moment');
+const SERVER_DATA_PREFIX = process.env.REACT_APP_SERVER ? `${process.env.REACT_APP_SERVER}/_` : '/_';
 
 class LoginPage extends Component {
+
   componentDidMount() {
     window.google.accounts.id.initialize({
       client_id: '1050787416441-9j2g9lvtqllfbsaa1m2dj284hgsldpg8.apps.googleusercontent.com',
@@ -11,7 +12,7 @@ class LoginPage extends Component {
         // POST to /_/handle_auth via a form:
         const form = document.createElement('form');
         form.setAttribute('method', 'POST');
-        form.setAttribute('action', 'http://localhost:8080/_/handle_auth');
+        form.setAttribute('action', SERVER_DATA_PREFIX + '/handle_auth');
         const hiddenField = document.createElement('input');
         hiddenField.setAttribute('type', 'hidden');
         hiddenField.setAttribute('name', 'credential');

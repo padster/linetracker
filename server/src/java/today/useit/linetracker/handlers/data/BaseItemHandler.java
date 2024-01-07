@@ -15,7 +15,8 @@ public abstract class BaseItemHandler<T> extends BaseCorsAwareHandler {
   protected final ItemStore<T> itemStore;
   protected final JsonParser<T> parser;
 
-  BaseItemHandler(ItemStore<T> itemStore, JsonParser<T> parser) {
+  protected BaseItemHandler(ItemStore<T> itemStore, JsonParser<T> parser, String clientUri) {
+    super(clientUri);
     this.itemStore = itemStore;
     this.parser = parser;
   }

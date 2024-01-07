@@ -1,5 +1,6 @@
 package today.useit.linetracker.handlers.data;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
 import com.github.padster.guiceserver.json.JsonParser;
@@ -31,8 +32,10 @@ public class ValuesHandler extends BaseCorsAwareHandler {
   @Inject ValuesHandler(
     Stores stores,
     JsonParser<List<DatedValue>> valuesParser,
-    JsonParser<ValueInsertRequest> insertParser
+    JsonParser<ValueInsertRequest> insertParser,
+    @ClientUri String clientUri
   ) {
+    super(clientUri);
     this.stores = stores;
     this.valuesParser = valuesParser;
     this.insertParser = insertParser;
@@ -57,7 +60,6 @@ public class ValuesHandler extends BaseCorsAwareHandler {
       throws Exception {
     String id = pathDetails.get("id");
     String type = pathDetails.get("type");
-    System.out.println("Getting for " + id + " of " + type);
 
     final List<DatedValue> result;
     if ("single".equals(type)) {
@@ -75,7 +77,6 @@ public class ValuesHandler extends BaseCorsAwareHandler {
       throws Exception {
     String id = pathDetails.get("id");
     String type = pathDetails.get("type");
-    System.out.println("CHANGING for " + id + " - " + type);
 
     String postData = IOUtils.toString(exchange.getRequestBody(), "utf-8");
     ValueInsertRequest request = insertParser.fromJson(postData);
@@ -94,7 +95,7 @@ public class ValuesHandler extends BaseCorsAwareHandler {
     try {
       DateFormat.dateToMs(yyyymmdd);
       double valueAsNumber = Double.valueOf(value);
-      System.out.println("Insert " + valueAsNumber + " at " + yyyymmdd);
+
       this.stores.valuesStore().addValuesToSingleLine(
         id, Arrays.asList(new DatedValue(yyyymmdd, valueAsNumber))
       );

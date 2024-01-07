@@ -32,6 +32,11 @@ public class Server {
     int port = portFlag != null ? Integer.parseInt(portFlag) : 80;
     logger.info("Running on :" + port + "...");
 
+    String clientUri = maybeGetFlag(args, "client_uri");
+    if (clientUri == null) {
+      clientUri = "http://localhost:3000";
+    }
+
     String storeType = maybeGetFlag(args, "store");
 
     String clientPath = maybeGetFlag(args, "client_path");
@@ -41,7 +46,7 @@ public class Server {
       Injector injector = Guice.createInjector(
           new ParserModule(),
           new BindingModule(clientPath),
-          new ServerModule(port, storeType)
+          new ServerModule(port, clientUri, storeType)
       );
 
       // HACK - migrate in memory first

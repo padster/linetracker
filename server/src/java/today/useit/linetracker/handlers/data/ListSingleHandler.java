@@ -1,5 +1,6 @@
 package today.useit.linetracker.handlers.data;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.json.JsonParser;
 import today.useit.linetracker.model.SingleLineMeta;
@@ -14,8 +15,9 @@ public class ListSingleHandler extends BaseListHandler<SingleLineMeta> {
   @Inject ListSingleHandler(
     Stores stores,
     JsonParser<SingleLineMeta> itemParser,
-    JsonParser<List<SingleLineMeta>> listParser
+    JsonParser<List<SingleLineMeta>> listParser,
+    @ClientUri String clientUri
   ) {
-    super(stores.singleStore(), itemParser, listParser);
+    super(stores.singleStore(), itemParser, listParser, clientUri);
   }
 }

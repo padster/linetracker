@@ -1,7 +1,11 @@
 build_image:
-	rm server.jar
+	rm server.jar ||:
 	cp ../server/target/server.jar .
-	rm -rf client_src/
+	rm -rf secret.key ||:
+	cp ../server/secret.key .
+	rm -rf lts-sa.json ||:
+	cp ../server/gcp-conf/lts-sa.json .
+	rm -rf client_src/ ||:
 	cp -R ../client/build/ client_src/
 	docker build -t linetracker-server .
 
@@ -14,3 +18,7 @@ kill_image:
 reload_nginx:
 	sudo cp nginx.conf /usr/share/nginx/
 	sudo /usr/sbin/nginx -t -c nginx.conf
+
+deploy_image:
+	docker tag linetracker-server us-west1-docker.pkg.dev/useful-theory-217216/useit-today-servers/linetracker-server:staging
+	docker push us-west1-docker.pkg.dev/useful-theory-217216/useit-today-servers/linetracker-server:staging

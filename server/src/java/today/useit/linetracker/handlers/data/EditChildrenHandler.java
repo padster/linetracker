@@ -1,5 +1,6 @@
 package today.useit.linetracker.handlers.data;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
 import com.github.padster.guiceserver.json.JsonParser;
@@ -21,7 +22,8 @@ public class EditChildrenHandler extends BaseCorsAwareHandler {
   private final ChildStore store;
   private final JsonParser<EditChildrenRequest> parser;
 
-  @Inject EditChildrenHandler(Stores stores, JsonParser<EditChildrenRequest> parser) {
+  @Inject EditChildrenHandler(Stores stores, JsonParser<EditChildrenRequest> parser, @ClientUri String clientUri) {
+    super(clientUri);
     this.store = stores.childStore();
     this.parser = parser;
   }

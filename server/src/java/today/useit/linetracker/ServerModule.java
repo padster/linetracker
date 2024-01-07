@@ -2,12 +2,14 @@ package today.useit.linetracker;
 
 import com.github.padster.guiceserver.auth.RouteAuthenticator;
 import com.github.padster.guiceserver.handlers.RouteHandler;
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.Annotations.ServerPort;
 import today.useit.linetracker.store.cloud.CloudStores;
 import today.useit.linetracker.store.memory.InMemoryStores;
 import today.useit.linetracker.auth.JwtUtil;
 import today.useit.linetracker.store.Stores;
 
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
 import com.google.inject.AbstractModule;
@@ -16,19 +18,24 @@ import com.google.inject.Singleton;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /** Configures the HttpServer within Guice. */
 public class ServerModule extends AbstractModule {
   public final int port;
+  public final String clientUri;
   public final String storeType;
 
-  public ServerModule(int port, String storeType) {
+  public ServerModule(int port, String clientUri, String storeType) {
     this.port = port;
+    this.clientUri = clientUri;
     this.storeType = storeType;
   }
 
   @Override protected void configure() {
     bind(Integer.class).annotatedWith(ServerPort.class).toInstance(this.port);
+    bind(String.class).annotatedWith(ClientUri.class).toInstance(this.clientUri);
 
     if (this.storeType == null) {
       System.out.println("> Storage: In memory");
@@ -48,12 +55,26 @@ public class ServerModule extends AbstractModule {
       bind(Stores.class).to(CloudStores.class).asEagerSingleton();
       // bind(Stores.class).toInstance(new CloudStores(db));
     } else if ("datastore_gcp".equals(storeType)) {
-      Datastore db = DatastoreOptions.newBuilder()
-        .setProjectId("useful-theory-217216")
-        .setDatabaseId("linetracker")
-        .build().getService();
-      bind(Datastore.class).toInstance(db);
-      bind(Stores.class).to(CloudStores.class).asEagerSingleton();
+      // Load credentials from lts-sa.json:
+      String credFile = System.getenv().get("GOOGLE_APPLICATION_CREDENTIALS");
+      System.out.println("> Load creds from " + Paths.get(credFile));
+      try {
+        ServiceAccountCredentials credentials = ServiceAccountCredentials.fromStream(
+          Files.newInputStream(Paths.get(credFile))
+        );
+
+        Datastore db = DatastoreOptions.newBuilder()
+          .setProjectId("useful-theory-217216")
+          .setDatabaseId("linetracker")
+          .setCredentials(credentials)
+          .build().getService();
+        bind(Datastore.class).toInstance(db);
+        bind(Stores.class).to(CloudStores.class).asEagerSingleton();
+      } catch (IOException e) {
+        e.printStackTrace();
+        throw new IllegalArgumentException("Could not load SA credentials", e);
+      }
+
     } else {
       throw new IllegalArgumentException("Unknown store: " + storeType);
     }

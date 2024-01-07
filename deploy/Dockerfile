@@ -18,6 +18,8 @@ RUN apt-get -y update && apt-get -y install nginx
 
 # Copy server .jar
 COPY server.jar .
+COPY secret.key .
+COPY lts-sa.json .
 
 # Copy client source
 RUN mkdir client_src

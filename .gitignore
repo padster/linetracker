@@ -3,6 +3,8 @@
 server/padster-linetracker.iml
 server/secret.key 
 deploy/*.jar
+deploy/secret.key
+deploy/lts-sa.json
 deploy/client_src
 
 # Client

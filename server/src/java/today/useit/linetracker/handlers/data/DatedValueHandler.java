@@ -1,5 +1,6 @@
 package today.useit.linetracker.handlers.data;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.handlers.RouteHandlerResponses.JsonResponse;
 
@@ -16,7 +17,8 @@ import jakarta.inject.Inject;
 public class DatedValueHandler extends BaseCorsAwareHandler {
   private final Stores stores;
 
-  @Inject DatedValueHandler(Stores stores) {
+  @Inject DatedValueHandler(Stores stores, @ClientUri String clientUri) {
+    super(clientUri);
     this.stores = stores;
   }
 

@@ -42,13 +42,13 @@ class App extends Component {
   }
 
   loginRequired(pathParts) {
-    const lr = pathParts.length != 1 || pathParts[0] != "login";
+    const lr = (pathParts.length !== 1 || pathParts[0] !== "login");
     console.log("Login required? " + lr);
     return lr;
   }
 
   hasLoginCookie() {
-    const hasCookie = document.cookie.indexOf("_gsID=") != -1;
+    const hasCookie = (document.cookie.indexOf("_gsID=") !== -1);
     console.log("Has login cookie? " + hasCookie);
     return hasCookie;
   }

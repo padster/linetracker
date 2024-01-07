@@ -30,6 +30,12 @@
           <include>*.template</include>
         </includes>
       </resource>
+      <resource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>*.key</include>
+        </includes>
+      </resource>
     </resources>
 
     <plugins>

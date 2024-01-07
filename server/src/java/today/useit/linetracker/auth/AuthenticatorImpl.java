@@ -2,6 +2,7 @@ package today.useit.linetracker.auth;
 
 import java.net.URI;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AppAuthenticator;
 import com.sun.net.httpserver.HttpPrincipal;
 
@@ -12,14 +13,16 @@ public class AuthenticatorImpl implements AppAuthenticator {
   private static final String REALM = "linetracker";
 
   private final JwtUtil jwt;
+  private final String clientUri;
 
-  @Inject AuthenticatorImpl(JwtUtil jwt) {
+  @Inject AuthenticatorImpl(JwtUtil jwt, @ClientUri String clientUri) {
     this.jwt = jwt;
+    this.clientUri = clientUri;
   }
 
   @Override
   public URI buildLoginURI(String originalUrl) {
-    return URI.create("https://localhost:3000/login?origin=" + originalUrl);
+    return URI.create(this.clientUri + "/login?origin=" + originalUrl);
   }
 
   @Override

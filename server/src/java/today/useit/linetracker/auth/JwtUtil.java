@@ -31,6 +31,7 @@ public class JwtUtil {
       byte[] encodedKeyBytes = Base64.getDecoder().decode(encodedKeyString);
       JST_KEY = new SecretKeySpec(encodedKeyBytes, 0, encodedKeyBytes.length, "HmacSHA256");
     } catch (Exception e) {
+      System.out.println("READING FROM: " + Paths.get("secret.key"));
       System.out.println("Error creating key: " + e);
       System.out.flush();
       throw new IllegalStateException(e);

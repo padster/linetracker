@@ -1,5 +1,6 @@
 package today.useit.linetracker.handlers.data;
 
+import com.github.padster.guiceserver.Annotations.ClientUri;
 import com.github.padster.guiceserver.auth.AuthAnnotations.LoginRequired;
 import com.github.padster.guiceserver.json.JsonParser;
 import today.useit.linetracker.model.GraphsLineMeta;
@@ -14,8 +15,9 @@ public class ListGraphsHandler extends BaseListHandler<GraphsLineMeta> {
   @Inject ListGraphsHandler(
     Stores stores,
     JsonParser<GraphsLineMeta> itemParser,
-    JsonParser<List<GraphsLineMeta>> listParser
+    JsonParser<List<GraphsLineMeta>> listParser,
+    @ClientUri String clientUri
   ) {
-    super(stores.graphsStore(), itemParser, listParser);
+    super(stores.graphsStore(), itemParser, listParser, clientUri);
   }
 }
