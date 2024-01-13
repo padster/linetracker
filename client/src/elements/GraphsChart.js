@@ -11,22 +11,18 @@ class GraphsChart extends Component {
   disposeSingleList: null;
   disposeComposList: null;
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.disposeItem = Stores.graphsStore.addListener(`${this.props.id}`, () => {
-      console.log("Item changed!");
       this.forceUpdate();
     });
     this.disposeValues = Stores.valuesStore.addListener(``, () => {
-      console.log("Values changed!");
       this.forceUpdate();
     });
     this.disposeSingleList = Stores.singleStore.addListener('', () => {
-      console.log("Single list updated!");
       this.forceUpdate();
     });
     this.disposeComposList = Stores.composStore.addListener('', () => {
-      console.log("Compos list updated!");
       this.forceUpdate();
     });
   }
@@ -39,28 +35,27 @@ class GraphsChart extends Component {
   }
 
   render() {
-    console.log("LOADING");
     const line = Stores.graphsStore.get(this.props.id);
     if (line === undefined) {
       return <LoadingIndicator />;
     }
-
-    console.log(line);
 
     const childrenWithNames = Stores.lookUpChildNames(line.childMetadata);
     if (childrenWithNames === undefined) {
       return <LoadingIndicator />;
     }
 
-    console.log(childrenWithNames);
-
     let allChildValues = true;
     const childLines = childrenWithNames.map(child => {
-      const childValues = Stores.valuesStore.get(`${child.type}/${child.id}`);
-      if (childValues === undefined || childValues === null) {
-        allChildValues = false;
+      if (child.type === 'const') {
+        return {name: child.name, constValue: child.value};
+      } else {
+        const childValues = Stores.valuesStore.get(`${child.type}/${child.id}`);
+        if (childValues === undefined || childValues === null) {
+          allChildValues = false;
+        }
+        return {name: child.name, values: childValues};
       }
-      return {name: child.name, values: childValues};
     });
 
     if (!allChildValues) {

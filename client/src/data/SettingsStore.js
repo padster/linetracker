@@ -32,10 +32,8 @@ class SettingsStore {
     if (this.settings !== undefined) {
       return this.settings;
     }
-    console.log("GETTING SETTINGS");
     window.$.getJSON(`${this.serverBase}`)
       .done(data => {
-        console.log("GOT! %O", data);
         this.settings = data;
         this._triggerListeners([]);
       })
@@ -61,7 +59,6 @@ class SettingsStore {
   _triggerListeners(path) {
     for (let i = path.length; i >= 0; i--) {
       const listenerPath = path.slice(0, i).join('/');
-      console.log("trigger listener at " + listenerPath);
       const listeners = this.listeners.get(listenerPath) || [];
       listeners.forEach(listener => listener());
     }

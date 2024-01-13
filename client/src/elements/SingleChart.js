@@ -9,7 +9,7 @@ class SingleChart extends Component {
   disposeItem: null;
   disposeValues: null;
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.disposeItem = Stores.singleStore.addListener(`${this.props.id}`, () => {
       console.log("Item changed!");
@@ -22,8 +22,8 @@ class SingleChart extends Component {
   }
 
   componentWillUnmount() {
-    this.disposeItem();
-    this.disposeValues();
+    // this.disposeItem();
+    // this.disposeValues();
   }
 
   render() {

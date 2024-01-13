@@ -34,11 +34,9 @@ class ValuesStore {
     if (this.values.has(fullID)) {
       return this.values.get(fullID);
     }
-    console.log("GETTING VALUES FOR " + fullID);
     this.values.set(fullID, undefined); // HACK - use loading object.
     window.$.getJSON(`${this.serverBase}/${fullID}`)
       .done(data => {
-        console.log("GOT! %O", data);
         this.values.set(fullID, data);
         this._triggerListeners(path);
       })
@@ -87,7 +85,6 @@ class ValuesStore {
   _triggerListeners(path) {
     for (let i = path.length; i >= 0; i--) {
       const listenerPath = path.slice(0, i).join('/');
-      console.log("trigger listener at " + listenerPath);
       const listeners = this.listeners.get(listenerPath) || [];
       listeners.forEach(listener => listener());
     }

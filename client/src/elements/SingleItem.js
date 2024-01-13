@@ -45,11 +45,12 @@ class SingleItem extends Component {
   render() {
     const line = Stores.singleStore.get(this.props.id);
     const values = Stores.valuesStore.get(`single/${this.props.id}`);
-    console.log("Loaded line = %O, values = %O", line, values);
 
     if (line === undefined || values === undefined) {
       return <LoadingIndicator />;
     }
+
+    values.sort((a, b) => b.t - a.t); // Sort descending by time
 
     const viewGraphLink = '/view/single/' + line.id;
     const noValuesMsg = values && values.length > 0 ? null :

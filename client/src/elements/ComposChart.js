@@ -9,14 +9,12 @@ class SingleChart extends Component {
   disposeItem: null;
   disposeValues: null;
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO - change dispose & re-listen on id change.
     this.disposeItem = Stores.composStore.addListener(`${this.props.id}`, () => {
-      console.log("Item changed!");
       this.forceUpdate();
     });
     this.disposeValues = Stores.valuesStore.addListener(`compos/${this.props.id}`, () => {
-      console.log("Values changed!");
       this.forceUpdate();
     });
   }
@@ -29,7 +27,6 @@ class SingleChart extends Component {
   render() {
     const line = Stores.composStore.get(this.props.id);
     const values = Stores.valuesStore.get(`compos/${this.props.id}`);
-    console.log("Loaded line = %O, values = %O", line, values);
 
     if (line === undefined || values === undefined) {
       return <LoadingIndicator />;

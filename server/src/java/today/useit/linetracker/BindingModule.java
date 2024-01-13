@@ -2,6 +2,7 @@ package today.useit.linetracker;
 
 import com.github.padster.guiceserver.BaseBindingModule;
 import com.github.padster.guiceserver.auth.AppAuthenticator;
+import com.github.padster.guiceserver.handlers.HealthCheckHandler;
 
 import today.useit.linetracker.handlers.*;
 import today.useit.linetracker.handlers.data.*;
@@ -33,6 +34,8 @@ public class BindingModule extends BaseBindingModule {
   }
 
   @Override protected void bindPageHandlers() {
+    bindPageHandler("/hello", HealthCheckHandler.class);
+    
     if (this.clientPath != null) {
       System.out.println("BINDING STATIC");
       bindPageHandler("/static/**", StaticHandler.class);

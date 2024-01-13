@@ -26,23 +26,18 @@ class HomePage extends Component {
 
   componentDidMount() {
     this.disposeGraphs = Stores.graphsStore.addListener('', () => {
-      console.log("Graphs updated!");
       this.forceUpdate();
     });
     this.disposeSingle = Stores.singleStore.addListener('', () => {
-      console.log("Single updated!");
       this.forceUpdate();
     });
     this.disposeCompos = Stores.composStore.addListener('', () => {
-      console.log("Compos updated!");
       this.forceUpdate();
     });
     this.disposeValues = Stores.valuesStore.addListener('', () => {
-      console.log("Values changed!");
       this.forceUpdate();
     });
     this.disposeSettings = Stores.settingsStore.addListener('', () => {
-      console.log("Settings changed!");
       this.forceUpdate();
     });
   }
@@ -69,14 +64,10 @@ class HomePage extends Component {
       return <LoadingIndicator />;
     }
 
-    console.log(graph);
-
     const childrenWithNames = Stores.lookUpChildNames(graph.childMetadata);
     if (childrenWithNames === undefined) {
       return <LoadingIndicator />;
     }
-
-    console.log(childrenWithNames);
 
     let allChildValues = true;
     const childLines = childrenWithNames.map(child => {
@@ -90,6 +81,23 @@ class HomePage extends Component {
     if (!allChildValues) {
       return <LoadingIndicator />;
     }
+
+    // Sort by value:
+    const childToLastNonZero = {};
+    childLines.forEach(line => {
+      if (line.values == null) return;
+      const lastNonZero = line.values.slice().reverse().find(p => p.v !== 0);
+      if (lastNonZero == null) return;
+      childToLastNonZero[line.name] = lastNonZero.v;
+    });
+
+    childLines.sort((a, b) => {
+      const lastA = childToLastNonZero[a.name];
+      const lastB = childToLastNonZero[b.name];
+      if (lastA == null) return 1;
+      if (lastB == null) return -1;
+      return lastB - lastA;
+    });
 
     return (
       <div>

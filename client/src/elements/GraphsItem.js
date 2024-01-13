@@ -46,9 +46,7 @@ class GraphsItem extends Component {
   }
 
   render() {
-    console.log("Rendering for " + this.props.id);
     const line = Stores.graphsStore.get(this.props.id);
-    console.log("Loaded in view: %O", line);
 
     if (line === undefined) {
       return <LoadingIndicator />;
@@ -82,11 +80,15 @@ class GraphsItem extends Component {
           <ul className="singleList">
             {childrenWithNames.map((child, i) => {
               const handleDelete = this.deleteChild.bind(this, line, child);
-              const childLink = `/${child.type}/${child.id}`;
+              var childName = <span>{child.name}</span>;
+              if (child.type !== 'const') {
+                const childLink = `/${child.type}/${child.id}`;
+                childName = <a href={childLink}>{child.name}</a>
+              }
               return (
                 <li key={i}><div className="trow">
                   <div className="listingName">
-                    <a href={childLink}>{child.name}</a>
+                    {childName}     
                   </div>
                   <div className="flex-spacer" />
                   <div className="listingActions">

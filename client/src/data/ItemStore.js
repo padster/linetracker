@@ -36,7 +36,6 @@ class ItemStore {
   }
 
   addListener(path: string, listener: Function): Function {
-    console.log("Listening for " + path);
     if (!this.listeners.has(path)) {
       this.listeners.set(path, new Set());
     }
@@ -116,7 +115,6 @@ class ItemStore {
   _triggerListeners(path) {
     for (let i = path.length; i >= 0; i--) {
       const listenerPath = path.slice(0, i).join('/');
-      console.log("trigger listener at " + listenerPath);
       const listeners = this.listeners.get(listenerPath) || [];
       listeners.forEach(listener => listener());
     }
